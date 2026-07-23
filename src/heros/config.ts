@@ -24,6 +24,10 @@ export const hero: Field = {
           value: 'none',
         },
         {
+          label: 'Marketing (left text + right image)',
+          value: 'marketing',
+        },
+        {
           label: 'High Impact',
           value: 'highImpact',
         },
@@ -38,6 +42,42 @@ export const hero: Field = {
       ],
       required: true,
     },
+    // ---- Marketing hero fields (only show when type = marketing) ----
+    {
+      name: 'prefix',
+      type: 'text',
+      label: 'Headline prefix (static first line, e.g. "How to")',
+      admin: { condition: (_, { type } = {}) => type === 'marketing' },
+    },
+    {
+      name: 'highlights',
+      type: 'array',
+      label: 'Rotating highlights (the coloured line that cycles)',
+      labels: { singular: 'Highlight', plural: 'Highlights' },
+      admin: { condition: (_, { type } = {}) => type === 'marketing' },
+      fields: [{ name: 'text', type: 'text', required: true }],
+    },
+    {
+      name: 'subtitle',
+      type: 'textarea',
+      label: 'Subtitle',
+      admin: { condition: (_, { type } = {}) => type === 'marketing' },
+    },
+    {
+      name: 'illustration',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Right‑side image',
+      admin: { condition: (_, { type } = {}) => type === 'marketing' },
+    },
+    {
+      name: 'background',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Background lines image (optional)',
+      admin: { condition: (_, { type } = {}) => type === 'marketing' },
+    },
+
     {
       name: 'richText',
       type: 'richText',

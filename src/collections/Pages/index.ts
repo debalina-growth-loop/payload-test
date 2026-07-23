@@ -73,7 +73,8 @@ export const Pages: CollectionConfig<'pages'> = {
               name: 'layout',
               type: 'blocks',
               blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock],
-              required: true,
+              // Optional so a page can be just a hero (e.g. the marketing homepage)
+              // with no body blocks.
               admin: {
                 initCollapsed: true,
               },

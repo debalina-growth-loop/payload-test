@@ -1,5 +1,62 @@
-import PageTemplate, { generateMetadata } from './[slug]/page'
+import type { Metadata } from 'next'
 
-export default PageTemplate
+import { PayloadRedirects } from '@/components/PayloadRedirects'
+import configPromise from '@payload-config'
+import { getPayload, type RequiredDataFromCollectionSlug } from 'payload'
+import { draftMode } from 'next/headers'
+import React, { cache } from 'react'
+import { homeStatic } from '@/endpoints/seed/home-static'
 
-export { generateMetadata }
+import { RenderBlocks } from '@/blocks/RenderBlocks'
+import { RenderHero } from '@/heros/RenderHero'
+import { generateMeta } from '@/utilities/generateMeta'
+import PageClient from './[slug]/page.client'
+import { LivePreviewListener } from '@/components/LivePreviewListener'
+
+export default async function HomePage() {
+  const { isEnabled: draft } = await draftMode()
+
+  let page: RequiredDataFromCollectionSlug<'pages'> | null = await queryHome()
+
+  // Fallback until a page with slug "home" exists in the admin
+  if (!page) page = homeStatic
+
+  const { hero, layout } = page
+
+  return (
+    <main>
+      <PageClient />
+      <PayloadRedirects disableNotFound url="/" />
+      {draft && <LivePreviewListener />}
+
+      {/* Hero renders flush to the top so it sits behind the floating navbar */}
+      <RenderHero {...hero} />
+
+      {/* Body blocks (empty for a hero-only homepage) */}
+      <div className="pb-24">
+        <RenderBlocks blocks={layout ?? []} />
+      </div>
+    </main>
+  )
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await queryHome()
+  return generateMeta({ doc: page })
+}
+
+const queryHome = cache(async () => {
+  const { isEnabled: draft } = await draftMode()
+  const payload = await getPayload({ config: configPromise })
+
+  const result = await payload.find({
+    collection: 'pages',
+    draft,
+    limit: 1,
+    pagination: false,
+    overrideAccess: draft,
+    where: { slug: { equals: 'home' } },
+  })
+
+  return result.docs?.[0] || null
+})
