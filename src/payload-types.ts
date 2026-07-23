@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     pages: Page;
     posts: Post;
+    products: Product;
     media: Media;
     categories: Category;
     users: User;
@@ -91,6 +92,7 @@ export interface Config {
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
+    products: ProductsSelect<false> | ProductsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -198,6 +200,10 @@ export interface Page {
               | ({
                   relationTo: 'posts';
                   value: string | Post;
+                } | null)
+              | ({
+                  relationTo: 'products';
+                  value: string | Product;
                 } | null);
             url?: string | null;
             label: string;
@@ -451,10 +457,45 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CallToActionBlock".
+ * via the `definition` "products".
  */
-export interface CallToActionBlock {
-  richText?: {
+export interface Product {
+  id: string;
+  title: string;
+  tagline?: string | null;
+  /**
+   * Full-bleed background image behind the hero text.
+   */
+  heroImage?: (string | null) | Media;
+  ctas?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: string | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: string | Post;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: string | Product;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  description?: {
     root: {
       type: string;
       children: {
@@ -469,33 +510,158 @@ export interface CallToActionBlock {
     };
     [k: string]: unknown;
   } | null;
-  links?:
+  layout?:
+    | (
+        | AnnouncementBannerBlock
+        | SectionHeadingBlock
+        | FeatureChecklistBlock
+        | TrustBadgesBlock
+        | SpecsTableBlock
+        | IntegrationsListBlock
+        | ContentBlock
+        | MediaBlock
+        | CallToActionBlock
+      )[]
+    | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+    description?: string | null;
+  };
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AnnouncementBannerBlock".
+ */
+export interface AnnouncementBannerBlock {
+  heading: string;
+  link: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: string | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: string | Post;
+        } | null)
+      | ({
+          relationTo: 'products';
+          value: string | Product;
+        } | null);
+    url?: string | null;
+    label: string;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'announcementBanner';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionHeadingBlock".
+ */
+export interface SectionHeadingBlock {
+  text: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  alignment: 'left' | 'center' | 'right';
+  size: 'small' | 'medium' | 'large' | 'xlarge';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'sectionHeading';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureChecklistBlock".
+ */
+export interface FeatureChecklistBlock {
+  heading?: string | null;
+  items?:
     | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: string | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: string | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-          /**
-           * Choose how the link should be rendered.
-           */
-          appearance?: ('default' | 'outline') | null;
-        };
+        text: string;
         id?: string | null;
       }[]
     | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'cta';
+  blockType: 'featureChecklist';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TrustBadgesBlock".
+ */
+export interface TrustBadgesBlock {
+  heading?: string | null;
+  badges?:
+    | {
+        logo: string | Media;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'trustBadges';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SpecsTableBlock".
+ */
+export interface SpecsTableBlock {
+  heading?: string | null;
+  specs?:
+    | {
+        label: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'specsTable';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IntegrationsListBlock".
+ */
+export interface IntegrationsListBlock {
+  heading?: string | null;
+  integrations?:
+    | {
+        name: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'integrationsList';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -532,6 +698,10 @@ export interface ContentBlock {
             | ({
                 relationTo: 'posts';
                 value: string | Post;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: string | Product;
               } | null);
           url?: string | null;
           label: string;
@@ -556,6 +726,58 @@ export interface MediaBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CallToActionBlock".
+ */
+export interface CallToActionBlock {
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  links?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: string | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: string | Post;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: string | Product;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cta';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -981,6 +1203,10 @@ export interface PayloadLockedDocument {
         value: string | Post;
       } | null)
     | ({
+        relationTo: 'products';
+        value: string | Product;
+      } | null)
+    | ({
         relationTo: 'media';
         value: string | Media;
       } | null)
@@ -1229,6 +1455,149 @@ export interface PostsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  title?: T;
+  tagline?: T;
+  heroImage?: T;
+  ctas?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  description?: T;
+  layout?:
+    | T
+    | {
+        announcementBanner?: T | AnnouncementBannerBlockSelect<T>;
+        sectionHeading?: T | SectionHeadingBlockSelect<T>;
+        featureChecklist?: T | FeatureChecklistBlockSelect<T>;
+        trustBadges?: T | TrustBadgesBlockSelect<T>;
+        specsTable?: T | SpecsTableBlockSelect<T>;
+        integrationsList?: T | IntegrationsListBlockSelect<T>;
+        content?: T | ContentBlockSelect<T>;
+        mediaBlock?: T | MediaBlockSelect<T>;
+        cta?: T | CallToActionBlockSelect<T>;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  publishedAt?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AnnouncementBannerBlock_select".
+ */
+export interface AnnouncementBannerBlockSelect<T extends boolean = true> {
+  heading?: T;
+  link?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionHeadingBlock_select".
+ */
+export interface SectionHeadingBlockSelect<T extends boolean = true> {
+  text?: T;
+  alignment?: T;
+  size?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureChecklistBlock_select".
+ */
+export interface FeatureChecklistBlockSelect<T extends boolean = true> {
+  heading?: T;
+  items?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TrustBadgesBlock_select".
+ */
+export interface TrustBadgesBlockSelect<T extends boolean = true> {
+  heading?: T;
+  badges?:
+    | T
+    | {
+        logo?: T;
+        url?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SpecsTableBlock_select".
+ */
+export interface SpecsTableBlockSelect<T extends boolean = true> {
+  heading?: T;
+  specs?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IntegrationsListBlock_select".
+ */
+export interface IntegrationsListBlockSelect<T extends boolean = true> {
+  heading?: T;
+  integrations?:
+    | T
+    | {
+        name?: T;
+        description?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1668,6 +2037,10 @@ export interface Header {
             | ({
                 relationTo: 'posts';
                 value: string | Post;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: string | Product;
               } | null);
           url?: string | null;
           label: string;
@@ -1688,6 +2061,10 @@ export interface Header {
                   | ({
                       relationTo: 'posts';
                       value: string | Post;
+                    } | null)
+                  | ({
+                      relationTo: 'products';
+                      value: string | Product;
                     } | null);
                 url?: string | null;
                 label: string;
@@ -1711,6 +2088,10 @@ export interface Header {
         | ({
             relationTo: 'posts';
             value: string | Post;
+          } | null)
+        | ({
+            relationTo: 'products';
+            value: string | Product;
           } | null);
       url?: string | null;
       label: string;
@@ -1738,6 +2119,10 @@ export interface Footer {
             | ({
                 relationTo: 'posts';
                 value: string | Post;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: string | Product;
               } | null);
           url?: string | null;
           label: string;
@@ -1854,6 +2239,10 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'posts';
           value: string | Post;
+        } | null)
+      | ({
+          relationTo: 'products';
+          value: string | Product;
         } | null);
     global?: string | null;
     user?: (string | null) | User;

@@ -38,23 +38,37 @@ function items(data?: Header | null): Item[] {
 function DesktopItem({ item }: { item: Item }) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+  const hasChildren = Boolean(item.children?.length)
   const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href + '/'))
+  const labelClassName =
+    'flex items-center gap-1 py-2 text-[1.05rem] font-semibold text-gray-800 hover:text-[#FF7A64]'
+
   return (
     <li className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
-      <Link
-        href={item.href}
-        className="flex items-center gap-1 py-2 text-[1.05rem] font-semibold text-gray-800 hover:text-[#FF7A64]"
-        style={active ? { color: CORAL } : undefined}
-      >
-        {item.label}
-        {item.children?.length ? (
-          <ChevronDown className="mt-0.5 h-4 w-4" style={{ transform: open ? 'rotate(180deg)' : 'none' }} />
-        ) : null}
-      </Link>
-      {item.children?.length && open ? (
+      {hasChildren ? (
+        // No real page backs this item (it's just a dropdown trigger), so it toggles the
+        // dropdown instead of navigating to a 404.
+        <button
+          aria-expanded={open}
+          className={labelClassName}
+          onClick={() => setOpen((prev) => !prev)}
+          type="button"
+        >
+          {item.label}
+          <ChevronDown
+            className="mt-0.5 h-4 w-4"
+            style={{ transform: open ? 'rotate(180deg)' : 'none' }}
+          />
+        </button>
+      ) : (
+        <Link href={item.href} className={labelClassName} style={active ? { color: CORAL } : undefined}>
+          {item.label}
+        </Link>
+      )}
+      {hasChildren && open ? (
         <div className="absolute left-1/2 top-full z-50 w-64 -translate-x-1/2 pt-3">
           <ul className="overflow-hidden rounded-xl border border-gray-100 bg-white py-3 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.25)]">
-            {item.children.map((c, i) => (
+            {item.children?.map((c, i) => (
               <li key={i}>
                 <Link href={c.href} className="block px-6 py-2.5 text-[1.02rem] font-medium text-gray-700 hover:bg-[#FDEDE8] hover:text-[#FF7A64]">
                   {c.label}
