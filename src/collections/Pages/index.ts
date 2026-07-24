@@ -7,6 +7,9 @@ import { CallToAction } from '../../blocks/CallToAction/config'
 import { Content } from '../../blocks/Content/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
+import { LogoMarquee } from '../../blocks/LogoMarquee/config'
+import { TextVideo } from '../../blocks/TextVideo/config'
+import { FeatureTabs } from '../../blocks/FeatureTabs/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -72,7 +75,16 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock],
+              blocks: [
+                CallToAction,
+                Content,
+                MediaBlock,
+                Archive,
+                FormBlock,
+                LogoMarquee,
+                TextVideo,
+                FeatureTabs,
+              ],
               // Optional so a page can be just a hero (e.g. the marketing homepage)
               // with no body blocks.
               admin: {

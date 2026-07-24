@@ -211,7 +211,18 @@ export interface Page {
       | null;
     media?: (string | null) | Media;
   };
-  layout?: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[] | null;
+  layout?:
+    | (
+        | CallToActionBlock
+        | ContentBlock
+        | MediaBlock
+        | ArchiveBlock
+        | FormBlock
+        | LogoMarqueeBlock
+        | TextVideoBlock
+        | FeatureTabsBlock
+      )[]
+    | null;
   meta?: {
     title?: string | null;
     /**
@@ -784,6 +795,123 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LogoMarqueeBlock".
+ */
+export interface LogoMarqueeBlock {
+  /**
+   * Optional. Leave empty to hide the coloured heading bar.
+   */
+  heading?: string | null;
+  speed?: ('1' | '2' | '3' | '4' | '5' | '6' | '7') | null;
+  spacing?: ('1' | '2' | '3' | '4' | '5' | '6' | '7') | null;
+  size?: ('1' | '2' | '3' | '4' | '5' | '6' | '7') | null;
+  bordered?: boolean | null;
+  /**
+   * Upload each client logo. They scroll automatically.
+   */
+  logos?:
+    | {
+        image: string | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'logoMarquee';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TextVideoBlock".
+ */
+export interface TextVideoBlock {
+  heading?: string | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  links?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: string | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: string | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Paste a YouTube / Wistia / Vimeo embed URL (used if no file uploaded).
+   */
+  videoEmbedUrl?: string | null;
+  videoFile?: (string | null) | Media;
+  background?: ('lightBlue' | 'white') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'textVideo';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureTabsBlock".
+ */
+export interface FeatureTabsBlock {
+  heading?: string | null;
+  tabs?:
+    | {
+        label: string;
+        subheading?: string | null;
+        body?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        stats?:
+          | {
+              value: string;
+              label: string;
+              id?: string | null;
+            }[]
+          | null;
+        image?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'featureTabs';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1100,6 +1228,9 @@ export interface PagesSelect<T extends boolean = true> {
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
+        logoMarquee?: T | LogoMarqueeBlockSelect<T>;
+        textVideo?: T | TextVideoBlockSelect<T>;
+        featureTabs?: T | FeatureTabsBlockSelect<T>;
       };
   meta?:
     | T
@@ -1196,6 +1327,77 @@ export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LogoMarqueeBlock_select".
+ */
+export interface LogoMarqueeBlockSelect<T extends boolean = true> {
+  heading?: T;
+  speed?: T;
+  spacing?: T;
+  size?: T;
+  bordered?: T;
+  logos?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TextVideoBlock_select".
+ */
+export interface TextVideoBlockSelect<T extends boolean = true> {
+  heading?: T;
+  body?: T;
+  links?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        id?: T;
+      };
+  videoEmbedUrl?: T;
+  videoFile?: T;
+  background?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureTabsBlock_select".
+ */
+export interface FeatureTabsBlockSelect<T extends boolean = true> {
+  heading?: T;
+  tabs?:
+    | T
+    | {
+        label?: T;
+        subheading?: T;
+        body?: T;
+        stats?:
+          | T
+          | {
+              value?: T;
+              label?: T;
+              id?: T;
+            };
+        image?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }
