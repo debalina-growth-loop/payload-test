@@ -221,6 +221,9 @@ export interface Page {
         | LogoMarqueeBlock
         | TextVideoBlock
         | FeatureTabsBlock
+        | CtaBannerBlock
+        | UpdatesCardsBlock
+        | SpotlightBlock
       )[]
     | null;
   meta?: {
@@ -824,6 +827,9 @@ export interface LogoMarqueeBlock {
  * via the `definition` "TextVideoBlock".
  */
 export interface TextVideoBlock {
+  sectionHeading?: string | null;
+  sectionSubheading?: string | null;
+  mediaPosition?: ('right' | 'left') | null;
   heading?: string | null;
   body?: {
     root: {
@@ -860,12 +866,32 @@ export interface TextVideoBlock {
         id?: string | null;
       }[]
     | null;
+  linkStyle?: ('button' | 'underline') | null;
+  logo?: (string | null) | Media;
   /**
    * Paste a YouTube / Wistia / Vimeo embed URL (used if no file uploaded).
    */
   videoEmbedUrl?: string | null;
   videoFile?: (string | null) | Media;
   background?: ('lightBlue' | 'white') | null;
+  /**
+   * Shown centered below the section, e.g. "View More Success Stories".
+   */
+  bottomLink?: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: string | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: string | Post;
+        } | null);
+    url?: string | null;
+    label?: string | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'textVideo';
@@ -909,6 +935,114 @@ export interface FeatureTabsBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'featureTabs';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaBannerBlock".
+ */
+export interface CtaBannerBlock {
+  heading: string;
+  subheading?: string | null;
+  buttons?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: string | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: string | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Falls back to a plain pink background if empty.
+   */
+  backgroundImage?: (string | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ctaBanner';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "UpdatesCardsBlock".
+ */
+export interface UpdatesCardsBlock {
+  heading?: string | null;
+  cards?:
+    | {
+        image?: (string | null) | Media;
+        /**
+         * When present the image is dimmed. Tick "Coral" to colour a line.
+         */
+        overlayLines?:
+          | {
+              text: string;
+              highlight?: boolean | null;
+              id?: string | null;
+            }[]
+          | null;
+        badgeType?: string | null;
+        badgeCategory?: string | null;
+        title?: string | null;
+        action?: ('download' | 'watch') | null;
+        /**
+         * Optional. Defaults to "Download" / "Watch".
+         */
+        actionLabel?: string | null;
+        downloadUrl?: string | null;
+        /**
+         * YouTube / Wistia / Vimeo embed URL.
+         */
+        videoUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'updatesCards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SpotlightBlock".
+ */
+export interface SpotlightBlock {
+  heading?: string | null;
+  subheading?: string | null;
+  background?: ('lightBlue' | 'white' | 'pink' | 'grey') | null;
+  cardType?: ('structured' | 'image') | null;
+  cards?:
+    | {
+        /**
+         * Upload OR paste an image URL below.
+         */
+        image?: (string | null) | Media;
+        imageUrl?: string | null;
+        logo?: (string | null) | Media;
+        date?: string | null;
+        title?: string | null;
+        excerpt?: string | null;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  seeAllLabel?: string | null;
+  seeAllUrl?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'spotlight';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1231,6 +1365,9 @@ export interface PagesSelect<T extends boolean = true> {
         logoMarquee?: T | LogoMarqueeBlockSelect<T>;
         textVideo?: T | TextVideoBlockSelect<T>;
         featureTabs?: T | FeatureTabsBlockSelect<T>;
+        ctaBanner?: T | CtaBannerBlockSelect<T>;
+        updatesCards?: T | UpdatesCardsBlockSelect<T>;
+        spotlight?: T | SpotlightBlockSelect<T>;
       };
   meta?:
     | T
@@ -1354,6 +1491,9 @@ export interface LogoMarqueeBlockSelect<T extends boolean = true> {
  * via the `definition` "TextVideoBlock_select".
  */
 export interface TextVideoBlockSelect<T extends boolean = true> {
+  sectionHeading?: T;
+  sectionSubheading?: T;
+  mediaPosition?: T;
   heading?: T;
   body?: T;
   links?:
@@ -1370,9 +1510,20 @@ export interface TextVideoBlockSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  linkStyle?: T;
+  logo?: T;
   videoEmbedUrl?: T;
   videoFile?: T;
   background?: T;
+  bottomLink?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -1398,6 +1549,87 @@ export interface FeatureTabsBlockSelect<T extends boolean = true> {
         image?: T;
         id?: T;
       };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaBannerBlock_select".
+ */
+export interface CtaBannerBlockSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  buttons?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  backgroundImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "UpdatesCardsBlock_select".
+ */
+export interface UpdatesCardsBlockSelect<T extends boolean = true> {
+  heading?: T;
+  cards?:
+    | T
+    | {
+        image?: T;
+        overlayLines?:
+          | T
+          | {
+              text?: T;
+              highlight?: T;
+              id?: T;
+            };
+        badgeType?: T;
+        badgeCategory?: T;
+        title?: T;
+        action?: T;
+        actionLabel?: T;
+        downloadUrl?: T;
+        videoUrl?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SpotlightBlock_select".
+ */
+export interface SpotlightBlockSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  background?: T;
+  cardType?: T;
+  cards?:
+    | T
+    | {
+        image?: T;
+        imageUrl?: T;
+        logo?: T;
+        date?: T;
+        title?: T;
+        excerpt?: T;
+        url?: T;
+        id?: T;
+      };
+  seeAllLabel?: T;
+  seeAllUrl?: T;
   id?: T;
   blockName?: T;
 }
@@ -1927,7 +2159,77 @@ export interface Header {
  */
 export interface Footer {
   id: string;
-  navItems?:
+  /**
+   * Footer uses light text, so pick a dark shade.
+   */
+  backgroundColor?: ('navy' | 'teal' | 'black' | 'blue' | 'plum') | null;
+  logo?: {
+    image?: (string | null) | Media;
+    text?: string | null;
+  };
+  ctaLink?: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: string | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: string | Post;
+        } | null);
+    url?: string | null;
+    label?: string | null;
+  };
+  columns?:
+    | {
+        title: string;
+        links?:
+          | {
+              link: {
+                type?: ('reference' | 'custom') | null;
+                newTab?: boolean | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: string | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: string | Post;
+                    } | null);
+                url?: string | null;
+                label: string;
+              };
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  subscribe?: {
+    heading?: string | null;
+    placeholder?: string | null;
+    consentText?: string | null;
+    privacyLink?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: string | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: string | Post;
+          } | null);
+      url?: string | null;
+      label?: string | null;
+    };
+    buttonLabel?: string | null;
+  };
+  legalLinks?:
     | {
         link: {
           type?: ('reference' | 'custom') | null;
@@ -1947,6 +2249,14 @@ export interface Footer {
         id?: string | null;
       }[]
     | null;
+  social?: {
+    linkedin?: string | null;
+    twitter?: string | null;
+    facebook?: string | null;
+    youtube?: string | null;
+  };
+  copyrightText?: string | null;
+  rightsText?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2012,7 +2322,60 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
-  navItems?:
+  backgroundColor?: T;
+  logo?:
+    | T
+    | {
+        image?: T;
+        text?: T;
+      };
+  ctaLink?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+      };
+  columns?:
+    | T
+    | {
+        title?: T;
+        links?:
+          | T
+          | {
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    label?: T;
+                  };
+              id?: T;
+            };
+        id?: T;
+      };
+  subscribe?:
+    | T
+    | {
+        heading?: T;
+        placeholder?: T;
+        consentText?: T;
+        privacyLink?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        buttonLabel?: T;
+      };
+  legalLinks?:
     | T
     | {
         link?:
@@ -2026,6 +2389,16 @@ export interface FooterSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  social?:
+    | T
+    | {
+        linkedin?: T;
+        twitter?: T;
+        facebook?: T;
+        youtube?: T;
+      };
+  copyrightText?: T;
+  rightsText?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

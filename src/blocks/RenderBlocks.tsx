@@ -10,6 +10,9 @@ import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { LogoMarqueeComponent } from '@/blocks/LogoMarquee/Component'
 import { TextVideoComponent } from '@/blocks/TextVideo/Component'
 import { FeatureTabsComponent } from '@/blocks/FeatureTabs/Component'
+import { CtaBannerComponent } from '@/blocks/CtaBanner/Component'
+import { UpdatesCardsComponent } from '@/blocks/UpdatesCards/Component'
+import { SpotlightComponent } from '@/blocks/Spotlight/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -20,6 +23,9 @@ const blockComponents = {
   logoMarquee: LogoMarqueeComponent,
   textVideo: TextVideoComponent,
   featureTabs: FeatureTabsComponent,
+  ctaBanner: CtaBannerComponent,
+  updatesCards: UpdatesCardsComponent,
+  spotlight: SpotlightComponent,
 }
 
 export const RenderBlocks: React.FC<{

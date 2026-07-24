@@ -32,8 +32,8 @@ export default async function HomePage() {
       {/* Hero renders flush to the top so it sits behind the floating navbar */}
       <RenderHero {...hero} />
 
-      {/* Body blocks (empty for a hero-only homepage) */}
-      <div className="pb-24">
+      {/* Body blocks (empty for a hero-only homepage). Last block hugs the footer. */}
+      <div className="[&>div:last-child]:mb-0">
         <RenderBlocks blocks={layout ?? []} />
       </div>
     </main>

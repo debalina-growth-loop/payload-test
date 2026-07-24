@@ -10,6 +10,9 @@ import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { LogoMarquee } from '../../blocks/LogoMarquee/config'
 import { TextVideo } from '../../blocks/TextVideo/config'
 import { FeatureTabs } from '../../blocks/FeatureTabs/config'
+import { CtaBanner } from '../../blocks/CtaBanner/config'
+import { UpdatesCards } from '../../blocks/UpdatesCards/config'
+import { Spotlight } from '../../blocks/Spotlight/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -84,6 +87,9 @@ export const Pages: CollectionConfig<'pages'> = {
                 LogoMarquee,
                 TextVideo,
                 FeatureTabs,
+                CtaBanner,
+                UpdatesCards,
+                Spotlight,
               ],
               // Optional so a page can be just a hero (e.g. the marketing homepage)
               // with no body blocks.
