@@ -159,7 +159,7 @@ export interface Page {
   id: string;
   title: string;
   hero: {
-    type: 'none' | 'marketing' | 'highImpact' | 'mediumImpact' | 'lowImpact';
+    type: 'none' | 'marketing' | 'platform' | 'highImpact' | 'mediumImpact' | 'lowImpact';
     prefix?: string | null;
     highlights?:
       | {
@@ -224,6 +224,11 @@ export interface Page {
         | CtaBannerBlock
         | UpdatesCardsBlock
         | SpotlightBlock
+        | StatsBannerBlock
+        | TestimonialCardsBlock
+        | DifferentiatorsBlock
+        | DiagramSectionBlock
+        | PlatformCarouselBlock
       )[]
     | null;
   meta?: {
@@ -929,6 +934,8 @@ export interface FeatureTabsBlock {
             }[]
           | null;
         image?: (string | null) | Media;
+        linkLabel?: string | null;
+        linkUrl?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1043,6 +1050,149 @@ export interface SpotlightBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'spotlight';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBannerBlock".
+ */
+export interface StatsBannerBlock {
+  heading: string;
+  subheading?: string | null;
+  stats?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  buttons?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: string | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: string | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  background?: ('white' | 'lightBlue' | 'dark') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'statsBanner';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialCardsBlock".
+ */
+export interface TestimonialCardsBlock {
+  heading?: string | null;
+  subheading?: string | null;
+  cards?:
+    | {
+        logo?: (string | null) | Media;
+        quote?: string | null;
+        author?: string | null;
+        metricValue?: string | null;
+        metricLabel?: string | null;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'testimonialCards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DifferentiatorsBlock".
+ */
+export interface DifferentiatorsBlock {
+  heading?: string | null;
+  subheading?: string | null;
+  illustration?: (string | null) | Media;
+  cards?:
+    | {
+        icon?: (string | null) | Media;
+        title: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'differentiators';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DiagramSectionBlock".
+ */
+export interface DiagramSectionBlock {
+  heading?: string | null;
+  subheading?: string | null;
+  image: string | Media;
+  background?: ('white' | 'lightBlue' | 'dark') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'diagramSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PlatformCarouselBlock".
+ */
+export interface PlatformCarouselBlock {
+  autoplaySeconds?: number | null;
+  slides?:
+    | {
+        type: 'stats' | 'testimonial' | 'logos' | 'image';
+        indicatorLogo?: (string | null) | Media;
+        heading?: string | null;
+        body?: string | null;
+        subheading?: string | null;
+        ctaLabel?: string | null;
+        ctaUrl?: string | null;
+        backgroundImage?: (string | null) | Media;
+        stats?:
+          | {
+              value: string;
+              label: string;
+              id?: string | null;
+            }[]
+          | null;
+        gridHeading?: string | null;
+        gridHighlight?: string | null;
+        logos?:
+          | {
+              image: string | Media;
+              id?: string | null;
+            }[]
+          | null;
+        image?: (string | null) | Media;
+        company?: string | null;
+        quote?: string | null;
+        authorName?: string | null;
+        authorTitle?: string | null;
+        metricValue?: string | null;
+        metricLabel?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'platformCarousel';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1368,6 +1518,11 @@ export interface PagesSelect<T extends boolean = true> {
         ctaBanner?: T | CtaBannerBlockSelect<T>;
         updatesCards?: T | UpdatesCardsBlockSelect<T>;
         spotlight?: T | SpotlightBlockSelect<T>;
+        statsBanner?: T | StatsBannerBlockSelect<T>;
+        testimonialCards?: T | TestimonialCardsBlockSelect<T>;
+        differentiators?: T | DifferentiatorsBlockSelect<T>;
+        diagramSection?: T | DiagramSectionBlockSelect<T>;
+        platformCarousel?: T | PlatformCarouselBlockSelect<T>;
       };
   meta?:
     | T
@@ -1547,6 +1702,8 @@ export interface FeatureTabsBlockSelect<T extends boolean = true> {
               id?: T;
             };
         image?: T;
+        linkLabel?: T;
+        linkUrl?: T;
         id?: T;
       };
   id?: T;
@@ -1630,6 +1787,135 @@ export interface SpotlightBlockSelect<T extends boolean = true> {
       };
   seeAllLabel?: T;
   seeAllUrl?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBannerBlock_select".
+ */
+export interface StatsBannerBlockSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  buttons?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  background?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialCardsBlock_select".
+ */
+export interface TestimonialCardsBlockSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  cards?:
+    | T
+    | {
+        logo?: T;
+        quote?: T;
+        author?: T;
+        metricValue?: T;
+        metricLabel?: T;
+        url?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DifferentiatorsBlock_select".
+ */
+export interface DifferentiatorsBlockSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  illustration?: T;
+  cards?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DiagramSectionBlock_select".
+ */
+export interface DiagramSectionBlockSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  image?: T;
+  background?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PlatformCarouselBlock_select".
+ */
+export interface PlatformCarouselBlockSelect<T extends boolean = true> {
+  autoplaySeconds?: T;
+  slides?:
+    | T
+    | {
+        type?: T;
+        indicatorLogo?: T;
+        heading?: T;
+        body?: T;
+        subheading?: T;
+        ctaLabel?: T;
+        ctaUrl?: T;
+        backgroundImage?: T;
+        stats?:
+          | T
+          | {
+              value?: T;
+              label?: T;
+              id?: T;
+            };
+        gridHeading?: T;
+        gridHighlight?: T;
+        logos?:
+          | T
+          | {
+              image?: T;
+              id?: T;
+            };
+        image?: T;
+        company?: T;
+        quote?: T;
+        authorName?: T;
+        authorTitle?: T;
+        metricValue?: T;
+        metricLabel?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }

@@ -13,6 +13,11 @@ import { FeatureTabs } from '../../blocks/FeatureTabs/config'
 import { CtaBanner } from '../../blocks/CtaBanner/config'
 import { UpdatesCards } from '../../blocks/UpdatesCards/config'
 import { Spotlight } from '../../blocks/Spotlight/config'
+import { StatsBanner } from '../../blocks/StatsBanner/config'
+import { TestimonialCards } from '../../blocks/TestimonialCards/config'
+import { Differentiators } from '../../blocks/Differentiators/config'
+import { DiagramSection } from '../../blocks/DiagramSection/config'
+import { PlatformCarousel } from '../../blocks/PlatformCarousel/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -90,6 +95,11 @@ export const Pages: CollectionConfig<'pages'> = {
                 CtaBanner,
                 UpdatesCards,
                 Spotlight,
+                StatsBanner,
+                TestimonialCards,
+                Differentiators,
+                DiagramSection,
+                PlatformCarousel,
               ],
               // Optional so a page can be just a hero (e.g. the marketing homepage)
               // with no body blocks.

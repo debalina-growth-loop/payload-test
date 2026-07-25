@@ -13,6 +13,11 @@ import { FeatureTabsComponent } from '@/blocks/FeatureTabs/Component'
 import { CtaBannerComponent } from '@/blocks/CtaBanner/Component'
 import { UpdatesCardsComponent } from '@/blocks/UpdatesCards/Component'
 import { SpotlightComponent } from '@/blocks/Spotlight/Component'
+import { StatsBannerComponent } from '@/blocks/StatsBanner/Component'
+import { TestimonialCardsComponent } from '@/blocks/TestimonialCards/Component'
+import { DifferentiatorsComponent } from '@/blocks/Differentiators/Component'
+import { DiagramSectionComponent } from '@/blocks/DiagramSection/Component'
+import { PlatformCarouselComponent } from '@/blocks/PlatformCarousel/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -26,6 +31,11 @@ const blockComponents = {
   ctaBanner: CtaBannerComponent,
   updatesCards: UpdatesCardsComponent,
   spotlight: SpotlightComponent,
+  statsBanner: StatsBannerComponent,
+  testimonialCards: TestimonialCardsComponent,
+  differentiators: DifferentiatorsComponent,
+  diagramSection: DiagramSectionComponent,
+  platformCarousel: PlatformCarouselComponent,
 }
 
 export const RenderBlocks: React.FC<{

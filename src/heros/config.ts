@@ -28,6 +28,10 @@ export const hero: Field = {
           value: 'marketing',
         },
         {
+          label: 'Platform (dark, left text + right AI graphic)',
+          value: 'platform',
+        },
+        {
           label: 'High Impact',
           value: 'highImpact',
         },
@@ -47,35 +51,35 @@ export const hero: Field = {
       name: 'prefix',
       type: 'text',
       label: 'Headline prefix (static first line, e.g. "How to")',
-      admin: { condition: (_, { type } = {}) => type === 'marketing' },
+      admin: { condition: (_, { type } = {}) => ['marketing', 'platform'].includes(type) },
     },
     {
       name: 'highlights',
       type: 'array',
       label: 'Rotating highlights (the coloured line that cycles)',
       labels: { singular: 'Highlight', plural: 'Highlights' },
-      admin: { condition: (_, { type } = {}) => type === 'marketing' },
+      admin: { condition: (_, { type } = {}) => ['marketing', 'platform'].includes(type) },
       fields: [{ name: 'text', type: 'text', required: true }],
     },
     {
       name: 'subtitle',
       type: 'textarea',
       label: 'Subtitle',
-      admin: { condition: (_, { type } = {}) => type === 'marketing' },
+      admin: { condition: (_, { type } = {}) => ['marketing', 'platform'].includes(type) },
     },
     {
       name: 'illustration',
       type: 'upload',
       relationTo: 'media',
       label: 'Right‑side image',
-      admin: { condition: (_, { type } = {}) => type === 'marketing' },
+      admin: { condition: (_, { type } = {}) => ['marketing', 'platform'].includes(type) },
     },
     {
       name: 'background',
       type: 'upload',
       relationTo: 'media',
       label: 'Background lines image (optional)',
-      admin: { condition: (_, { type } = {}) => type === 'marketing' },
+      admin: { condition: (_, { type } = {}) => ['marketing', 'platform'].includes(type) },
     },
 
     {

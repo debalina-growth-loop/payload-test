@@ -59,6 +59,20 @@ export const FeatureTabsComponent: React.FC<FeatureTabsBlock> = ({ heading, tabs
                 enableGutter={false}
               />
             )}
+            {cur.linkLabel && cur.linkUrl && (
+              <a
+                href={cur.linkUrl}
+                className="mb-6 inline-flex w-fit items-center gap-2 text-[1.05rem] font-bold text-[#FF7A64] hover:underline"
+              >
+                {cur.linkLabel}
+                <svg className="w-[18px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 12">
+                  <path
+                    d="M21.8 5.1 17.5.8c-.5-.5-1.3-.5-1.8 0-.2.2-.4.6-.4.9 0 .3.1.7.4.9l2 2H1.8C1.1 4.7.5 5.3.5 6s.6 1.3 1.3 1.3h15.9l-2 2c-.5.5-.5 1.3 0 1.8.3.3.6.4.9.4.3 0 .7-.1.9-.4l4.2-4.2c.3-.2.4-.6.4-.9 0-.3-.1-.6-.3-.9z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </a>
+            )}
             {Array.isArray(cur.stats) && cur.stats.length > 0 && (
               <div className="mt-auto flex flex-col">
                 {cur.stats.map((s, i) => {

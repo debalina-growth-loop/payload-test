@@ -84,6 +84,23 @@ export const FeatureTabs: Block = {
           relationTo: 'media',
           label: 'Right-side image',
         },
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'linkLabel',
+              type: 'text',
+              label: 'CTA label (optional)',
+              admin: { width: '40%', placeholder: 'e.g. Learn More' },
+            },
+            {
+              name: 'linkUrl',
+              type: 'text',
+              label: 'CTA URL (optional)',
+              admin: { width: '60%' },
+            },
+          ],
+        },
       ],
     },
   ],
