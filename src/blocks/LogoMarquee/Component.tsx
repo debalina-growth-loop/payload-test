@@ -42,8 +42,7 @@ export const LogoMarqueeComponent: React.FC<LogoMarqueeBlock> = ({
   const sz = { logo: LOGO_HEIGHT[step(size)], card: CARD_SIZE[step(size)] }
 
   return (
-    // -my-16 cancels the RenderBlocks wrapper's top+bottom margins so the band hugs its neighbours
-    <section className="-my-16 w-full overflow-hidden">
+    <section className="w-full overflow-hidden">
       {heading && (
         <h2
           className="py-3 text-center text-2xl font-bold text-white"

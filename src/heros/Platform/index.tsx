@@ -3,7 +3,7 @@
 import React from 'react'
 import type { Page } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
-import { NetworkBackground } from './NetworkBackground'
+import { NetworkAnimation } from '@/components/NetworkAnimation'
 
 // Brand colours (change these to rebrand)
 const CORAL = '#FF7A64'
@@ -31,8 +31,8 @@ export const PlatformHero: React.FC<Page['hero']> = (props) => {
       className="relative -mt-16 flex min-h-screen items-center overflow-hidden"
       style={{ background: HERO_BG }}
     >
-      {/* Simple constellation network drifting top → bottom (transparent canvas) */}
-      <NetworkBackground className="pointer-events-none absolute inset-0 z-0" />
+      {/* Shared SVG constellation on the left */}
+      <NetworkAnimation side="left" />
 
       <div className="relative z-10 mx-auto grid w-full max-w-[1360px] grid-cols-1 items-center gap-8 px-6 pb-16 pt-28 lg:grid-cols-2 lg:pt-24">
         {/* LEFT: text */}

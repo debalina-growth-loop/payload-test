@@ -228,6 +228,7 @@ export interface Page {
         | TestimonialCardsBlock
         | DifferentiatorsBlock
         | DiagramSectionBlock
+        | ResourceHubBlock
         | PlatformCarouselBlock
       )[]
     | null;
@@ -834,7 +835,12 @@ export interface LogoMarqueeBlock {
 export interface TextVideoBlock {
   sectionHeading?: string | null;
   sectionSubheading?: string | null;
+  /**
+   * Dark theme uses light text, a gradient heading and a moving network graphic on the right.
+   */
+  theme?: ('light' | 'dark') | null;
   mediaPosition?: ('right' | 'left') | null;
+  eyebrow?: string | null;
   heading?: string | null;
   body?: {
     root: {
@@ -878,7 +884,10 @@ export interface TextVideoBlock {
    */
   videoEmbedUrl?: string | null;
   videoFile?: (string | null) | Media;
-  background?: ('lightBlue' | 'white') | null;
+  /**
+   * Pick a light color for the Light theme, or a dark color for the Dark theme.
+   */
+  background?: ('lightBlue' | 'white' | 'darkGradient' | 'darkNavy' | 'black') | null;
   /**
    * Shown centered below the section, e.g. "View More Success Stories".
    */
@@ -906,6 +915,15 @@ export interface TextVideoBlock {
  * via the `definition` "FeatureTabsBlock".
  */
 export interface FeatureTabsBlock {
+  /**
+   * Dark theme uses the glass tab bar, gradient heading and a glowing dark card (like "See FarEye AI in Action").
+   */
+  theme?: ('light' | 'dark') | null;
+  eyebrow?: string | null;
+  /**
+   * Controls the left spacing of bullet lists in the dark card.
+   */
+  listIndent?: ('flush' | 'small' | 'medium') | null;
   heading?: string | null;
   tabs?:
     | {
@@ -928,6 +946,7 @@ export interface FeatureTabsBlock {
         } | null;
         stats?:
           | {
+              name?: string | null;
               value: string;
               label: string;
               id?: string | null;
@@ -1121,6 +1140,11 @@ export interface TestimonialCardsBlock {
  * via the `definition` "DifferentiatorsBlock".
  */
 export interface DifferentiatorsBlock {
+  /**
+   * Dark theme shows a network background, a clickable accordion on the left and a swapping image on the right (like "What sets FarEye Apart?").
+   */
+  theme?: ('light' | 'dark') | null;
+  eyebrow?: string | null;
   heading?: string | null;
   subheading?: string | null;
   illustration?: (string | null) | Media;
@@ -1129,6 +1153,8 @@ export interface DifferentiatorsBlock {
         icon?: (string | null) | Media;
         title: string;
         description?: string | null;
+        image?: (string | null) | Media;
+        imageUrl?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1141,13 +1167,56 @@ export interface DifferentiatorsBlock {
  * via the `definition` "DiagramSectionBlock".
  */
 export interface DiagramSectionBlock {
+  eyebrow?: string | null;
   heading?: string | null;
   subheading?: string | null;
-  image: string | Media;
+  image?: (string | null) | Media;
+  /**
+   * Used if no image is uploaded above.
+   */
+  imageUrl?: string | null;
   background?: ('white' | 'lightBlue' | 'dark') | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'diagramSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ResourceHubBlock".
+ */
+export interface ResourceHubBlock {
+  eyebrow?: string | null;
+  heading?: string | null;
+  background?: ('darkGradient' | 'darkNavy' | 'black') | null;
+  featuredCards?:
+    | {
+        image?: (string | null) | Media;
+        imageUrl?: string | null;
+        title: string;
+        body?: string | null;
+        action?: ('watch' | 'read' | 'none') | null;
+        actionLabel?: string | null;
+        videoUrl?: string | null;
+        linkUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  sideCards?:
+    | {
+        image?: (string | null) | Media;
+        imageUrl?: string | null;
+        title: string;
+        body?: string | null;
+        action?: ('watch' | 'read' | 'none') | null;
+        actionLabel?: string | null;
+        videoUrl?: string | null;
+        linkUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'resourceHub';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1522,6 +1591,7 @@ export interface PagesSelect<T extends boolean = true> {
         testimonialCards?: T | TestimonialCardsBlockSelect<T>;
         differentiators?: T | DifferentiatorsBlockSelect<T>;
         diagramSection?: T | DiagramSectionBlockSelect<T>;
+        resourceHub?: T | ResourceHubBlockSelect<T>;
         platformCarousel?: T | PlatformCarouselBlockSelect<T>;
       };
   meta?:
@@ -1648,7 +1718,9 @@ export interface LogoMarqueeBlockSelect<T extends boolean = true> {
 export interface TextVideoBlockSelect<T extends boolean = true> {
   sectionHeading?: T;
   sectionSubheading?: T;
+  theme?: T;
   mediaPosition?: T;
+  eyebrow?: T;
   heading?: T;
   body?: T;
   links?:
@@ -1687,6 +1759,9 @@ export interface TextVideoBlockSelect<T extends boolean = true> {
  * via the `definition` "FeatureTabsBlock_select".
  */
 export interface FeatureTabsBlockSelect<T extends boolean = true> {
+  theme?: T;
+  eyebrow?: T;
+  listIndent?: T;
   heading?: T;
   tabs?:
     | T
@@ -1697,6 +1772,7 @@ export interface FeatureTabsBlockSelect<T extends boolean = true> {
         stats?:
           | T
           | {
+              name?: T;
               value?: T;
               label?: T;
               id?: T;
@@ -1849,6 +1925,8 @@ export interface TestimonialCardsBlockSelect<T extends boolean = true> {
  * via the `definition` "DifferentiatorsBlock_select".
  */
 export interface DifferentiatorsBlockSelect<T extends boolean = true> {
+  theme?: T;
+  eyebrow?: T;
   heading?: T;
   subheading?: T;
   illustration?: T;
@@ -1858,6 +1936,8 @@ export interface DifferentiatorsBlockSelect<T extends boolean = true> {
         icon?: T;
         title?: T;
         description?: T;
+        image?: T;
+        imageUrl?: T;
         id?: T;
       };
   id?: T;
@@ -1868,10 +1948,49 @@ export interface DifferentiatorsBlockSelect<T extends boolean = true> {
  * via the `definition` "DiagramSectionBlock_select".
  */
 export interface DiagramSectionBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
   heading?: T;
   subheading?: T;
   image?: T;
+  imageUrl?: T;
   background?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ResourceHubBlock_select".
+ */
+export interface ResourceHubBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  heading?: T;
+  background?: T;
+  featuredCards?:
+    | T
+    | {
+        image?: T;
+        imageUrl?: T;
+        title?: T;
+        body?: T;
+        action?: T;
+        actionLabel?: T;
+        videoUrl?: T;
+        linkUrl?: T;
+        id?: T;
+      };
+  sideCards?:
+    | T
+    | {
+        image?: T;
+        imageUrl?: T;
+        title?: T;
+        body?: T;
+        action?: T;
+        actionLabel?: T;
+        videoUrl?: T;
+        linkUrl?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }

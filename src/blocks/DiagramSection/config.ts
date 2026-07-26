@@ -9,6 +9,11 @@ export const DiagramSection: Block = {
   },
   fields: [
     {
+      name: 'eyebrow',
+      type: 'text',
+      label: 'Eyebrow (small line above heading, optional)',
+    },
+    {
       name: 'heading',
       type: 'text',
       label: 'Heading',
@@ -22,8 +27,13 @@ export const DiagramSection: Block = {
       name: 'image',
       type: 'upload',
       relationTo: 'media',
-      label: 'Diagram / image',
-      required: true,
+      label: 'Diagram / image (upload)',
+    },
+    {
+      name: 'imageUrl',
+      type: 'text',
+      label: 'Or image URL',
+      admin: { description: 'Used if no image is uploaded above.' },
     },
     {
       name: 'background',

@@ -17,6 +17,7 @@ import { StatsBanner } from '../../blocks/StatsBanner/config'
 import { TestimonialCards } from '../../blocks/TestimonialCards/config'
 import { Differentiators } from '../../blocks/Differentiators/config'
 import { DiagramSection } from '../../blocks/DiagramSection/config'
+import { ResourceHub } from '../../blocks/ResourceHub/config'
 import { PlatformCarousel } from '../../blocks/PlatformCarousel/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
@@ -99,6 +100,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 TestimonialCards,
                 Differentiators,
                 DiagramSection,
+                ResourceHub,
                 PlatformCarousel,
               ],
               // Optional so a page can be just a hero (e.g. the marketing homepage)

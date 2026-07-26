@@ -46,14 +46,39 @@ export const TextVideo: Block = {
       ],
     },
     {
-      name: 'mediaPosition',
-      type: 'select',
-      label: 'Video position',
-      defaultValue: 'right',
-      options: [
-        { label: 'Right (text on left)', value: 'right' },
-        { label: 'Left (text on right)', value: 'left' },
+      type: 'row',
+      fields: [
+        {
+          name: 'theme',
+          type: 'select',
+          label: 'Theme',
+          defaultValue: 'light',
+          options: [
+            { label: 'Light', value: 'light' },
+            { label: 'Dark (with network animation)', value: 'dark' },
+          ],
+          admin: {
+            width: '50%',
+            description: 'Dark theme uses light text, a gradient heading and a moving network graphic on the right.',
+          },
+        },
+        {
+          name: 'mediaPosition',
+          type: 'select',
+          label: 'Video position',
+          defaultValue: 'right',
+          options: [
+            { label: 'Right (text on left)', value: 'right' },
+            { label: 'Left (text on right)', value: 'left' },
+          ],
+          admin: { width: '50%' },
+        },
       ],
+    },
+    {
+      name: 'eyebrow',
+      type: 'text',
+      label: 'Eyebrow (small label above heading, optional)',
     },
     {
       name: 'heading',
@@ -116,12 +141,19 @@ export const TextVideo: Block = {
     {
       name: 'background',
       type: 'select',
-      label: 'Background',
+      label: 'Background color',
       defaultValue: 'lightBlue',
       options: [
-        { label: 'Light Blue', value: 'lightBlue' },
-        { label: 'White', value: 'white' },
+        { label: 'Light Blue (light theme)', value: 'lightBlue' },
+        { label: 'White (light theme)', value: 'white' },
+        { label: 'Dark Gradient (dark theme)', value: 'darkGradient' },
+        { label: 'Dark Navy (dark theme)', value: 'darkNavy' },
+        { label: 'Black (dark theme)', value: 'black' },
       ],
+      admin: {
+        description:
+          'Pick a light color for the Light theme, or a dark color for the Dark theme.',
+      },
     },
     makeOptional(
       link({

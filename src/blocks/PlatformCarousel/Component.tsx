@@ -100,7 +100,7 @@ export const PlatformCarouselComponent: React.FC<PlatformCarouselBlock> = ({
     .filter(({ slide }) => mediaUrl(slide.indicatorLogo))
 
   return (
-    <section className="-mt-16 w-full bg-[#06222c]">
+    <section className="w-full bg-[#06222c]">
       {/* Top coral accent — right half, rounded top-left corner (flat edge at bottom) */}
       <div className="flex justify-end">
         <div className="h-[40px] w-full rounded-tl-[60px] bg-[#FF7A64] lg:h-[76px] lg:w-1/2" />

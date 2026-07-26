@@ -17,6 +17,7 @@ import { StatsBannerComponent } from '@/blocks/StatsBanner/Component'
 import { TestimonialCardsComponent } from '@/blocks/TestimonialCards/Component'
 import { DifferentiatorsComponent } from '@/blocks/Differentiators/Component'
 import { DiagramSectionComponent } from '@/blocks/DiagramSection/Component'
+import { ResourceHubComponent } from '@/blocks/ResourceHub/Component'
 import { PlatformCarouselComponent } from '@/blocks/PlatformCarousel/Component'
 
 const blockComponents = {
@@ -35,6 +36,7 @@ const blockComponents = {
   testimonialCards: TestimonialCardsComponent,
   differentiators: DifferentiatorsComponent,
   diagramSection: DiagramSectionComponent,
+  resourceHub: ResourceHubComponent,
   platformCarousel: PlatformCarouselComponent,
 }
 
@@ -56,7 +58,7 @@ export const RenderBlocks: React.FC<{
 
             if (Block) {
               return (
-                <div className="my-16" key={index}>
+                <div key={index}>
                   {/* @ts-expect-error there may be some mismatch between the expected types here */}
                   <Block {...block} disableInnerContainer />
                 </div>

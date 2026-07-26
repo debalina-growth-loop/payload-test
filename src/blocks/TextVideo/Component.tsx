@@ -4,6 +4,7 @@ import type { TextVideoBlock } from '@/payload-types'
 
 import RichText from '@/components/RichText'
 import { CMSLink } from '@/components/Link'
+import { NetworkAnimation } from '@/components/NetworkAnimation'
 
 const mediaVideo = (m: unknown): { url: string } | null =>
   typeof m === 'object' && m !== null && 'url' in m && typeof (m as { url?: string }).url === 'string'
@@ -12,9 +13,20 @@ const mediaVideo = (m: unknown): { url: string } | null =>
 
 const mediaUrl = (m: unknown): string | null => mediaVideo(m)?.url ?? null
 
+const BG: Record<string, string> = {
+  lightBlue: '#DCEFF6',
+  white: '#ffffff',
+  darkGradient: 'linear-gradient(160deg,#062029 0%,#0A2E3A 55%,#07242E 100%)',
+  darkNavy: '#012A36',
+  black: '#0B0B0B',
+}
+const LIGHT_BGS = ['lightBlue', 'white']
+
 export const TextVideoComponent: React.FC<TextVideoBlock> = ({
   sectionHeading,
   sectionSubheading,
+  theme,
+  eyebrow,
   mediaPosition,
   heading,
   body,
@@ -28,11 +40,19 @@ export const TextVideoComponent: React.FC<TextVideoBlock> = ({
 }) => {
   const file = mediaVideo(videoFile)
   const logoUrl = mediaUrl(logo)
-  const bg = background === 'white' ? '#ffffff' : '#DCEFF6'
+  const dark = theme === 'dark'
   const videoLeft = mediaPosition === 'left'
 
+  // Pick a sensible background for the chosen theme even if the admin left the default
+  let bgKey = background || (dark ? 'darkGradient' : 'lightBlue')
+  if (dark && LIGHT_BGS.includes(bgKey)) bgKey = 'darkGradient'
+  if (!dark && !LIGHT_BGS.includes(bgKey)) bgKey = 'lightBlue'
+  const bg = BG[bgKey]
+
+  const ink = dark ? '#ffffff' : '#012A36'
+
   const Video = (
-    <div className="w-full lg:w-[48%]">
+    <div className="relative z-10 w-full lg:w-[48%]">
       <div className="mx-auto w-full max-w-[622px] overflow-hidden rounded-lg">
         {file ? (
           <video controls className="aspect-video w-full" src={file.url} />
@@ -52,16 +72,35 @@ export const TextVideoComponent: React.FC<TextVideoBlock> = ({
   )
 
   const Text = (
-    <div className="w-full lg:w-[43%]">
-      {heading && (
-        <h2 className="mb-[30px] text-[2rem] font-bold leading-[1.31]" style={{ color: '#012A36' }}>
-          {heading}
-        </h2>
+    <div className="relative z-10 w-full lg:w-[43%]">
+      {eyebrow && (
+        <p
+          className="mb-[20px] text-[1.05rem]"
+          style={{ color: ink, opacity: 0.8 }}
+        >
+          {eyebrow}
+        </p>
       )}
+
+      {heading &&
+        (dark ? (
+          <h2
+            className="mb-[30px] bg-clip-text text-[2.6rem] font-bold leading-[1.15] text-transparent"
+            style={{ backgroundImage: 'linear-gradient(120deg,#EAF0F2 0%,#FF7A64 72%)' }}
+          >
+            {heading}
+          </h2>
+        ) : (
+          <h2 className="mb-[30px] text-[2rem] font-bold leading-[1.31]" style={{ color: ink }}>
+            {heading}
+          </h2>
+        ))}
 
       {body && (
         <RichText
-          className="mb-[30px] text-[1.13rem] leading-[1.8]"
+          className={`mb-[30px] text-[1.13rem] leading-[1.8] ${
+            dark ? '[&_*]:text-white' : 'text-[#012A36]'
+          }`}
           data={body}
           enableGutter={false}
         />
@@ -72,7 +111,15 @@ export const TextVideoComponent: React.FC<TextVideoBlock> = ({
           <CMSLink
             {...links[0].link}
             appearance="inline"
-            className="inline-block font-bold text-[#012A36] underline underline-offset-4 transition-opacity hover:opacity-70"
+            className={`inline-block font-bold underline underline-offset-4 transition-opacity hover:opacity-70 ${
+              dark ? 'text-white' : 'text-[#012A36]'
+            }`}
+          />
+        ) : dark ? (
+          <CMSLink
+            {...links[0].link}
+            appearance="inline"
+            className="mt-2 inline-flex items-center gap-3 rounded-full bg-[#FF7A64] px-8 py-3 text-[1.05rem] font-bold text-white transition-opacity hover:opacity-90"
           />
         ) : (
           <CMSLink
@@ -98,15 +145,30 @@ export const TextVideoComponent: React.FC<TextVideoBlock> = ({
   )
 
   return (
-    <section style={{ backgroundColor: bg }} className="w-full">
-      <div className="mx-auto max-w-[1360px] px-6 py-[40px] lg:py-[60px]">
+    <section
+      style={{ background: bg }}
+      className={`relative w-full ${dark ? 'overflow-hidden' : ''}`}
+    >
+      {dark && <NetworkAnimation side="right" />}
+
+      <div
+        className={`relative z-10 mx-[100px] max-w-[1440px] px-4 md:px-8 lg:px-10 ${
+          dark
+            ? 'py-[60px] lg:py-[80px] xl:pt-[180px] xl:pb-[120px]'
+            : 'py-[40px] lg:py-[60px]'
+        }`}
+      >
         {(sectionHeading || sectionSubheading) && (
           <div className="mb-12 text-center">
             {sectionHeading && (
-              <h2 className="text-[2rem] font-bold text-[#012A36]">{sectionHeading}</h2>
+              <h2 className="text-[2rem] font-bold" style={{ color: ink }}>
+                {sectionHeading}
+              </h2>
             )}
             {sectionSubheading && (
-              <p className="mt-3 text-[1.25rem] font-bold text-[#012A36]">{sectionSubheading}</p>
+              <p className="mt-3 text-[1.25rem] font-bold" style={{ color: ink }}>
+                {sectionSubheading}
+              </p>
             )}
           </div>
         )}
@@ -130,7 +192,9 @@ export const TextVideoComponent: React.FC<TextVideoBlock> = ({
             <CMSLink
               {...bottomLink}
               appearance="inline"
-              className="inline-block text-[1.05rem] font-bold text-[#012A36] underline underline-offset-4 transition-opacity hover:opacity-70"
+              className={`inline-block text-[1.05rem] font-bold underline underline-offset-4 transition-opacity hover:opacity-70 ${
+                dark ? 'text-white' : 'text-[#012A36]'
+              }`}
             />
           </div>
         )}

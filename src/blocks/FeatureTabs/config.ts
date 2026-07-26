@@ -3,6 +3,8 @@ import type { Block } from 'payload'
 import {
   FixedToolbarFeature,
   InlineToolbarFeature,
+  UnorderedListFeature,
+  OrderedListFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 
@@ -14,6 +16,37 @@ export const FeatureTabs: Block = {
     plural: 'Feature Tabs',
   },
   fields: [
+    {
+      name: 'theme',
+      type: 'select',
+      label: 'Theme',
+      defaultValue: 'light',
+      options: [
+        { label: 'Light', value: 'light' },
+        { label: 'Dark (glassmorphic tabs + glowing card)', value: 'dark' },
+      ],
+      admin: {
+        description:
+          'Dark theme uses the glass tab bar, gradient heading and a glowing dark card (like "See FarEye AI in Action").',
+      },
+    },
+    {
+      name: 'eyebrow',
+      type: 'text',
+      label: 'Eyebrow (small line above heading, optional)',
+    },
+    {
+      name: 'listIndent',
+      type: 'select',
+      label: 'Bullet indent (dark theme)',
+      defaultValue: 'flush',
+      options: [
+        { label: 'Flush left (no space)', value: 'flush' },
+        { label: 'Small indent', value: 'small' },
+        { label: 'Medium indent', value: 'medium' },
+      ],
+      admin: { description: 'Controls the left spacing of bullet lists in the dark card.' },
+    },
     {
       name: 'heading',
       type: 'text',
@@ -45,6 +78,8 @@ export const FeatureTabs: Block = {
           editor: lexicalEditor({
             features: ({ rootFeatures }) => [
               ...rootFeatures,
+              UnorderedListFeature(),
+              OrderedListFeature(),
               FixedToolbarFeature(),
               InlineToolbarFeature(),
             ],
@@ -57,6 +92,12 @@ export const FeatureTabs: Block = {
           labels: { singular: 'Stat', plural: 'Stats' },
           admin: { initCollapsed: true },
           fields: [
+            {
+              name: 'name',
+              type: 'text',
+              label: 'Stat name (bold label, dark theme only — optional)',
+              admin: { placeholder: 'e.g. Customer Service' },
+            },
             {
               type: 'row',
               fields: [
