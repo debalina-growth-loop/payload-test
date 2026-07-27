@@ -43,6 +43,10 @@ export const hero: Field = {
           label: 'Low Impact',
           value: 'lowImpact',
         },
+        {
+          label: 'Video Background (left text, bottom CTAs)',
+          value: 'video',
+        },
       ],
       required: true,
     },
@@ -107,6 +111,17 @@ export const hero: Field = {
       type: 'upload',
       admin: {
         condition: (_, { type } = {}) => ['highImpact', 'mediumImpact'].includes(type),
+      },
+      relationTo: 'media',
+      required: true,
+    },
+    {
+      name: 'backgroundVideo',
+      type: 'upload',
+      label: 'Background video',
+      admin: {
+        condition: (_, { type } = {}) => type === 'video',
+        description: 'Autoplaying, muted, looping background video for the hero.',
       },
       relationTo: 'media',
       required: true,

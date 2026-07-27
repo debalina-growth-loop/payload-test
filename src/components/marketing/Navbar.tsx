@@ -39,14 +39,30 @@ function DesktopItem({ item, dark }: { item: Item; dark?: boolean }) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href + '/'))
+  const hasChildren = Boolean(item.children?.length)
+
   return (
-    <li className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+    <li
+      className="relative"
+      onMouseLeave={() => setOpen(false)}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') setOpen(false)
+      }}
+    >
       {/* Active-tab indicator: coral line spanning the label width */}
       {active && (
         <span className="absolute -top-1 left-0 right-0 h-[3px] rounded-full bg-[#FF7A64]" />
       )}
       <Link
         href={item.href}
+        aria-expanded={hasChildren ? open : undefined}
+        aria-haspopup={hasChildren ? 'true' : undefined}
+        onClick={(e) => {
+          if (hasChildren) {
+            e.preventDefault()
+            setOpen((o) => !o)
+          }
+        }}
         className={`flex items-center gap-1 py-2 text-[1.05rem] font-semibold hover:text-[#FF7A64] ${
           active
             ? dark
@@ -193,7 +209,13 @@ export const Navbar: React.FC<{ data?: Header | null }> = ({ data }) => {
                   <Link
                     href={item.href}
                     className={`block py-2.5 text-lg font-semibold ${dark ? 'text-white' : ''}`}
-                    onClick={() => setMobileOpen(false)}
+                    onClick={(e) => {
+                      if (item.children?.length) {
+                        e.preventDefault()
+                        return
+                      }
+                      setMobileOpen(false)
+                    }}
                   >
                     {item.label}
                   </Link>

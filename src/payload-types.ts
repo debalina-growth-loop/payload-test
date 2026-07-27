@@ -159,7 +159,7 @@ export interface Page {
   id: string;
   title: string;
   hero: {
-    type: 'none' | 'marketing' | 'platform' | 'highImpact' | 'mediumImpact' | 'lowImpact';
+    type: 'none' | 'marketing' | 'platform' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'video';
     prefix?: string | null;
     highlights?:
       | {
@@ -210,6 +210,10 @@ export interface Page {
         }[]
       | null;
     media?: (string | null) | Media;
+    /**
+     * Autoplaying, muted, looping background video for the hero.
+     */
+    backgroundVideo?: (string | null) | Media;
   };
   layout?:
     | (
@@ -1572,6 +1576,7 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
             };
         media?: T;
+        backgroundVideo?: T;
       };
   layout?:
     | T
