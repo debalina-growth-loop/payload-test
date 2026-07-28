@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     pages: Page;
     posts: Post;
+    products: Product;
     media: Media;
     categories: Category;
     users: User;
@@ -91,6 +92,7 @@ export interface Config {
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
+    products: ProductsSelect<false> | ProductsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -106,7 +108,7 @@ export interface Config {
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   fallbackLocale: null;
   globals: {
@@ -156,7 +158,7 @@ export interface UserAuthOperations {
  * via the `definition` "pages".
  */
 export interface Page {
-  id: string;
+  id: number;
   title: string;
   hero: {
     type: 'none' | 'marketing' | 'platform' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'video';
@@ -168,8 +170,8 @@ export interface Page {
         }[]
       | null;
     subtitle?: string | null;
-    illustration?: (string | null) | Media;
-    background?: (string | null) | Media;
+    illustration?: (number | null) | Media;
+    background?: (number | null) | Media;
     richText?: {
       root: {
         type: string;
@@ -193,11 +195,11 @@ export interface Page {
             reference?:
               | ({
                   relationTo: 'pages';
-                  value: string | Page;
+                  value: number | Page;
                 } | null)
               | ({
                   relationTo: 'posts';
-                  value: string | Post;
+                  value: number | Post;
                 } | null);
             url?: string | null;
             label: string;
@@ -209,11 +211,11 @@ export interface Page {
           id?: string | null;
         }[]
       | null;
-    media?: (string | null) | Media;
+    media?: (number | null) | Media;
     /**
      * Autoplaying, muted, looping background video for the hero.
      */
-    backgroundVideo?: (string | null) | Media;
+    backgroundVideo?: (number | null) | Media;
   };
   layout?:
     | (
@@ -241,7 +243,7 @@ export interface Page {
     /**
      * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
     description?: string | null;
   };
   publishedAt?: string | null;
@@ -259,7 +261,7 @@ export interface Page {
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
+  id: number;
   alt?: string | null;
   caption?: {
     root: {
@@ -276,7 +278,7 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
-  folder?: (string | null) | FolderInterface;
+  folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -352,18 +354,18 @@ export interface Media {
  * via the `definition` "payload-folders".
  */
 export interface FolderInterface {
-  id: string;
+  id: number;
   name: string;
-  folder?: (string | null) | FolderInterface;
+  folder?: (number | null) | FolderInterface;
   documentsAndFolders?: {
     docs?: (
       | {
           relationTo?: 'payload-folders';
-          value: string | FolderInterface;
+          value: number | FolderInterface;
         }
       | {
           relationTo?: 'media';
-          value: string | Media;
+          value: number | Media;
         }
     )[];
     hasNextPage?: boolean;
@@ -378,9 +380,9 @@ export interface FolderInterface {
  * via the `definition` "posts".
  */
 export interface Post {
-  id: string;
+  id: number;
   title: string;
-  heroImage?: (string | null) | Media;
+  heroImage?: (number | null) | Media;
   content: {
     root: {
       type: string;
@@ -396,18 +398,18 @@ export interface Post {
     };
     [k: string]: unknown;
   };
-  relatedPosts?: (string | Post)[] | null;
-  categories?: (string | Category)[] | null;
+  relatedPosts?: (number | Post)[] | null;
+  categories?: (number | Category)[] | null;
   meta?: {
     title?: string | null;
     /**
      * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
     description?: string | null;
   };
   publishedAt?: string | null;
-  authors?: (string | User)[] | null;
+  authors?: (number | User)[] | null;
   populatedAuthors?:
     | {
         id?: string | null;
@@ -428,17 +430,17 @@ export interface Post {
  * via the `definition` "categories".
  */
 export interface Category {
-  id: string;
+  id: number;
   title: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
   slug: string;
-  parent?: (string | null) | Category;
+  parent?: (number | null) | Category;
   breadcrumbs?:
     | {
-        doc?: (string | null) | Category;
+        doc?: (number | null) | Category;
         url?: string | null;
         label?: string | null;
         id?: string | null;
@@ -452,7 +454,7 @@ export interface Category {
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
   name?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -501,11 +503,11 @@ export interface CallToActionBlock {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -551,11 +553,11 @@ export interface ContentBlock {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -576,7 +578,7 @@ export interface ContentBlock {
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
-  media: string | Media;
+  media: number | Media;
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
@@ -603,12 +605,12 @@ export interface ArchiveBlock {
   } | null;
   populateBy?: ('collection' | 'selection') | null;
   relationTo?: 'posts' | null;
-  categories?: (string | Category)[] | null;
+  categories?: (number | Category)[] | null;
   limit?: number | null;
   selectedDocs?:
     | {
         relationTo: 'posts';
-        value: string | Post;
+        value: number | Post;
       }[]
     | null;
   id?: string | null;
@@ -620,7 +622,7 @@ export interface ArchiveBlock {
  * via the `definition` "FormBlock".
  */
 export interface FormBlock {
-  form: string | Form;
+  form: number | Form;
   enableIntro?: boolean | null;
   introContent?: {
     root: {
@@ -646,7 +648,7 @@ export interface FormBlock {
  * via the `definition` "forms".
  */
 export interface Form {
-  id: string;
+  id: number;
   title: string;
   fields?:
     | (
@@ -824,7 +826,7 @@ export interface LogoMarqueeBlock {
    */
   logos?:
     | {
-        image: string | Media;
+        image: number | Media;
         id?: string | null;
       }[]
     | null;
@@ -869,11 +871,11 @@ export interface TextVideoBlock {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -882,12 +884,12 @@ export interface TextVideoBlock {
       }[]
     | null;
   linkStyle?: ('button' | 'underline') | null;
-  logo?: (string | null) | Media;
+  logo?: (number | null) | Media;
   /**
    * Paste a YouTube / Wistia / Vimeo embed URL (used if no file uploaded).
    */
   videoEmbedUrl?: string | null;
-  videoFile?: (string | null) | Media;
+  videoFile?: (number | null) | Media;
   /**
    * Pick a light color for the Light theme, or a dark color for the Dark theme.
    */
@@ -901,11 +903,11 @@ export interface TextVideoBlock {
     reference?:
       | ({
           relationTo: 'pages';
-          value: string | Page;
+          value: number | Page;
         } | null)
       | ({
           relationTo: 'posts';
-          value: string | Post;
+          value: number | Post;
         } | null);
     url?: string | null;
     label?: string | null;
@@ -956,7 +958,7 @@ export interface FeatureTabsBlock {
               id?: string | null;
             }[]
           | null;
-        image?: (string | null) | Media;
+        image?: (number | null) | Media;
         linkLabel?: string | null;
         linkUrl?: string | null;
         id?: string | null;
@@ -981,11 +983,11 @@ export interface CtaBannerBlock {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -1000,7 +1002,7 @@ export interface CtaBannerBlock {
   /**
    * Falls back to a plain pink background if empty.
    */
-  backgroundImage?: (string | null) | Media;
+  backgroundImage?: (number | null) | Media;
   id?: string | null;
   blockName?: string | null;
   blockType: 'ctaBanner';
@@ -1013,7 +1015,7 @@ export interface UpdatesCardsBlock {
   heading?: string | null;
   cards?:
     | {
-        image?: (string | null) | Media;
+        image?: (number | null) | Media;
         /**
          * When present the image is dimmed. Tick "Coral" to colour a line.
          */
@@ -1058,9 +1060,9 @@ export interface SpotlightBlock {
         /**
          * Upload OR paste an image URL below.
          */
-        image?: (string | null) | Media;
+        image?: (number | null) | Media;
         imageUrl?: string | null;
-        logo?: (string | null) | Media;
+        logo?: (number | null) | Media;
         date?: string | null;
         title?: string | null;
         excerpt?: string | null;
@@ -1096,11 +1098,11 @@ export interface StatsBannerBlock {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -1126,7 +1128,7 @@ export interface TestimonialCardsBlock {
   subheading?: string | null;
   cards?:
     | {
-        logo?: (string | null) | Media;
+        logo?: (number | null) | Media;
         quote?: string | null;
         author?: string | null;
         metricValue?: string | null;
@@ -1151,13 +1153,13 @@ export interface DifferentiatorsBlock {
   eyebrow?: string | null;
   heading?: string | null;
   subheading?: string | null;
-  illustration?: (string | null) | Media;
+  illustration?: (number | null) | Media;
   cards?:
     | {
-        icon?: (string | null) | Media;
+        icon?: (number | null) | Media;
         title: string;
         description?: string | null;
-        image?: (string | null) | Media;
+        image?: (number | null) | Media;
         imageUrl?: string | null;
         id?: string | null;
       }[]
@@ -1174,7 +1176,7 @@ export interface DiagramSectionBlock {
   eyebrow?: string | null;
   heading?: string | null;
   subheading?: string | null;
-  image?: (string | null) | Media;
+  image?: (number | null) | Media;
   /**
    * Used if no image is uploaded above.
    */
@@ -1194,7 +1196,7 @@ export interface ResourceHubBlock {
   background?: ('darkGradient' | 'darkNavy' | 'black') | null;
   featuredCards?:
     | {
-        image?: (string | null) | Media;
+        image?: (number | null) | Media;
         imageUrl?: string | null;
         title: string;
         body?: string | null;
@@ -1207,7 +1209,7 @@ export interface ResourceHubBlock {
     | null;
   sideCards?:
     | {
-        image?: (string | null) | Media;
+        image?: (number | null) | Media;
         imageUrl?: string | null;
         title: string;
         body?: string | null;
@@ -1231,13 +1233,13 @@ export interface PlatformCarouselBlock {
   slides?:
     | {
         type: 'stats' | 'testimonial' | 'logos' | 'image';
-        indicatorLogo?: (string | null) | Media;
+        indicatorLogo?: (number | null) | Media;
         heading?: string | null;
         body?: string | null;
         subheading?: string | null;
         ctaLabel?: string | null;
         ctaUrl?: string | null;
-        backgroundImage?: (string | null) | Media;
+        backgroundImage?: (number | null) | Media;
         stats?:
           | {
               value: string;
@@ -1249,11 +1251,11 @@ export interface PlatformCarouselBlock {
         gridHighlight?: string | null;
         logos?:
           | {
-              image: string | Media;
+              image: number | Media;
               id?: string | null;
             }[]
           | null;
-        image?: (string | null) | Media;
+        image?: (number | null) | Media;
         company?: string | null;
         quote?: string | null;
         authorName?: string | null;
@@ -1269,10 +1271,210 @@ export interface PlatformCarouselBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: number;
+  title: string;
+  tagline?: string | null;
+  /**
+   * Full-bleed background image behind the hero text.
+   */
+  heroImage?: (number | null) | Media;
+  ctas?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  layout?:
+    | (
+        | AnnouncementBannerBlock
+        | SectionHeadingBlock
+        | FeatureChecklistBlock
+        | TrustBadgesBlock
+        | SpecsTableBlock
+        | IntegrationsListBlock
+        | ContentBlock
+        | MediaBlock
+        | CallToActionBlock
+      )[]
+    | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AnnouncementBannerBlock".
+ */
+export interface AnnouncementBannerBlock {
+  heading: string;
+  link: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null);
+    url?: string | null;
+    label: string;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'announcementBanner';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionHeadingBlock".
+ */
+export interface SectionHeadingBlock {
+  text: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  alignment: 'left' | 'center' | 'right';
+  size: 'small' | 'medium' | 'large' | 'xlarge';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'sectionHeading';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureChecklistBlock".
+ */
+export interface FeatureChecklistBlock {
+  heading?: string | null;
+  items?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'featureChecklist';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TrustBadgesBlock".
+ */
+export interface TrustBadgesBlock {
+  heading?: string | null;
+  badges?:
+    | {
+        logo: number | Media;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'trustBadges';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SpecsTableBlock".
+ */
+export interface SpecsTableBlock {
+  heading?: string | null;
+  specs?:
+    | {
+        label: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'specsTable';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IntegrationsListBlock".
+ */
+export interface IntegrationsListBlock {
+  heading?: string | null;
+  integrations?:
+    | {
+        name: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'integrationsList';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
-  id: string;
+  id: number;
   /**
    * You will need to rebuild the website when changing this field.
    */
@@ -1282,11 +1484,11 @@ export interface Redirect {
     reference?:
       | ({
           relationTo: 'pages';
-          value: string | Page;
+          value: number | Page;
         } | null)
       | ({
           relationTo: 'posts';
-          value: string | Post;
+          value: number | Post;
         } | null);
     url?: string | null;
   };
@@ -1298,8 +1500,8 @@ export interface Redirect {
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
-  id: string;
-  form: string | Form;
+  id: number;
+  form: number | Form;
   submissionData?:
     | {
         field: string;
@@ -1317,18 +1519,18 @@ export interface FormSubmission {
  * via the `definition` "search".
  */
 export interface Search {
-  id: string;
+  id: number;
   title?: string | null;
   priority?: number | null;
   doc: {
     relationTo: 'posts';
-    value: string | Post;
+    value: number | Post;
   };
   slug?: string | null;
   meta?: {
     title?: string | null;
     description?: string | null;
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
   };
   categories?:
     | {
@@ -1346,7 +1548,7 @@ export interface Search {
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -1363,7 +1565,7 @@ export interface PayloadKv {
  * via the `definition` "payload-jobs".
  */
 export interface PayloadJob {
-  id: string;
+  id: number;
   /**
    * Input data provided to the job
    */
@@ -1455,52 +1657,56 @@ export interface PayloadJob {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
         relationTo: 'pages';
-        value: string | Page;
+        value: number | Page;
       } | null)
     | ({
         relationTo: 'posts';
-        value: string | Post;
+        value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'products';
+        value: number | Product;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
       } | null)
     | ({
         relationTo: 'categories';
-        value: string | Category;
+        value: number | Category;
       } | null)
     | ({
         relationTo: 'users';
-        value: string | User;
+        value: number | User;
       } | null)
     | ({
         relationTo: 'redirects';
-        value: string | Redirect;
+        value: number | Redirect;
       } | null)
     | ({
         relationTo: 'forms';
-        value: string | Form;
+        value: number | Form;
       } | null)
     | ({
         relationTo: 'form-submissions';
-        value: string | FormSubmission;
+        value: number | FormSubmission;
       } | null)
     | ({
         relationTo: 'search';
-        value: string | Search;
+        value: number | Search;
       } | null)
     | ({
         relationTo: 'payload-folders';
-        value: string | FolderInterface;
+        value: number | FolderInterface;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -1510,10 +1716,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -1533,7 +1739,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -2076,6 +2282,149 @@ export interface PostsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  title?: T;
+  tagline?: T;
+  heroImage?: T;
+  ctas?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  description?: T;
+  layout?:
+    | T
+    | {
+        announcementBanner?: T | AnnouncementBannerBlockSelect<T>;
+        sectionHeading?: T | SectionHeadingBlockSelect<T>;
+        featureChecklist?: T | FeatureChecklistBlockSelect<T>;
+        trustBadges?: T | TrustBadgesBlockSelect<T>;
+        specsTable?: T | SpecsTableBlockSelect<T>;
+        integrationsList?: T | IntegrationsListBlockSelect<T>;
+        content?: T | ContentBlockSelect<T>;
+        mediaBlock?: T | MediaBlockSelect<T>;
+        cta?: T | CallToActionBlockSelect<T>;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  publishedAt?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AnnouncementBannerBlock_select".
+ */
+export interface AnnouncementBannerBlockSelect<T extends boolean = true> {
+  heading?: T;
+  link?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionHeadingBlock_select".
+ */
+export interface SectionHeadingBlockSelect<T extends boolean = true> {
+  text?: T;
+  alignment?: T;
+  size?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureChecklistBlock_select".
+ */
+export interface FeatureChecklistBlockSelect<T extends boolean = true> {
+  heading?: T;
+  items?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TrustBadgesBlock_select".
+ */
+export interface TrustBadgesBlockSelect<T extends boolean = true> {
+  heading?: T;
+  badges?:
+    | T
+    | {
+        logo?: T;
+        url?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SpecsTableBlock_select".
+ */
+export interface SpecsTableBlockSelect<T extends boolean = true> {
+  heading?: T;
+  specs?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IntegrationsListBlock_select".
+ */
+export interface IntegrationsListBlockSelect<T extends boolean = true> {
+  heading?: T;
+  integrations?:
+    | T
+    | {
+        name?: T;
+        description?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
@@ -2491,9 +2840,9 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  * via the `definition` "header".
  */
 export interface Header {
-  id: string;
+  id: number;
   logo?: {
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
     /**
      * Shown when no logo image is set.
      */
@@ -2507,11 +2856,11 @@ export interface Header {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -2527,11 +2876,11 @@ export interface Header {
                 reference?:
                   | ({
                       relationTo: 'pages';
-                      value: string | Page;
+                      value: number | Page;
                     } | null)
                   | ({
                       relationTo: 'posts';
-                      value: string | Post;
+                      value: number | Post;
                     } | null);
                 url?: string | null;
                 label: string;
@@ -2550,11 +2899,11 @@ export interface Header {
       reference?:
         | ({
             relationTo: 'pages';
-            value: string | Page;
+            value: number | Page;
           } | null)
         | ({
             relationTo: 'posts';
-            value: string | Post;
+            value: number | Post;
           } | null);
       url?: string | null;
       label: string;
@@ -2568,13 +2917,13 @@ export interface Header {
  * via the `definition` "footer".
  */
 export interface Footer {
-  id: string;
+  id: number;
   /**
    * Footer uses light text, so pick a dark shade.
    */
   backgroundColor?: ('navy' | 'teal' | 'black' | 'blue' | 'plum') | null;
   logo?: {
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
     text?: string | null;
   };
   ctaLink?: {
@@ -2583,11 +2932,11 @@ export interface Footer {
     reference?:
       | ({
           relationTo: 'pages';
-          value: string | Page;
+          value: number | Page;
         } | null)
       | ({
           relationTo: 'posts';
-          value: string | Post;
+          value: number | Post;
         } | null);
     url?: string | null;
     label?: string | null;
@@ -2603,11 +2952,11 @@ export interface Footer {
                 reference?:
                   | ({
                       relationTo: 'pages';
-                      value: string | Page;
+                      value: number | Page;
                     } | null)
                   | ({
                       relationTo: 'posts';
-                      value: string | Post;
+                      value: number | Post;
                     } | null);
                 url?: string | null;
                 label: string;
@@ -2628,11 +2977,11 @@ export interface Footer {
       reference?:
         | ({
             relationTo: 'pages';
-            value: string | Page;
+            value: number | Page;
           } | null)
         | ({
             relationTo: 'posts';
-            value: string | Post;
+            value: number | Post;
           } | null);
       url?: string | null;
       label?: string | null;
@@ -2647,11 +2996,11 @@ export interface Footer {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -2834,14 +3183,18 @@ export interface TaskSchedulePublish {
     doc?:
       | ({
           relationTo: 'pages';
-          value: string | Page;
+          value: number | Page;
         } | null)
       | ({
           relationTo: 'posts';
-          value: string | Post;
+          value: number | Post;
+        } | null)
+      | ({
+          relationTo: 'products';
+          value: number | Product;
         } | null);
     global?: string | null;
-    user?: (string | null) | User;
+    user?: (number | null) | User;
   };
   output?: unknown;
 }
