@@ -161,7 +161,7 @@ export interface Page {
   id: string;
   title: string;
   hero: {
-    type: 'none' | 'marketing' | 'highImpact' | 'mediumImpact' | 'lowImpact';
+    type: 'none' | 'marketing' | 'platform' | 'highImpact' | 'mediumImpact' | 'lowImpact';
     prefix?: string | null;
     highlights?:
       | {
@@ -217,7 +217,27 @@ export interface Page {
       | null;
     media?: (string | null) | Media;
   };
-  layout?: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[] | null;
+  layout?:
+    | (
+        | CallToActionBlock
+        | ContentBlock
+        | MediaBlock
+        | ArchiveBlock
+        | FormBlock
+        | LogoMarqueeBlock
+        | TextVideoBlock
+        | FeatureTabsBlock
+        | CtaBannerBlock
+        | UpdatesCardsBlock
+        | SpotlightBlock
+        | StatsBannerBlock
+        | TestimonialCardsBlock
+        | DifferentiatorsBlock
+        | DiagramSectionBlock
+        | ResourceHubBlock
+        | PlatformCarouselBlock
+      )[]
+    | null;
   meta?: {
     title?: string | null;
     /**
@@ -1006,6 +1026,467 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LogoMarqueeBlock".
+ */
+export interface LogoMarqueeBlock {
+  /**
+   * Optional. Leave empty to hide the coloured heading bar.
+   */
+  heading?: string | null;
+  speed?: ('1' | '2' | '3' | '4' | '5' | '6' | '7') | null;
+  spacing?: ('1' | '2' | '3' | '4' | '5' | '6' | '7') | null;
+  size?: ('1' | '2' | '3' | '4' | '5' | '6' | '7') | null;
+  bordered?: boolean | null;
+  /**
+   * Upload each client logo. They scroll automatically.
+   */
+  logos?:
+    | {
+        image: string | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'logoMarquee';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TextVideoBlock".
+ */
+export interface TextVideoBlock {
+  sectionHeading?: string | null;
+  sectionSubheading?: string | null;
+  /**
+   * Dark theme uses light text, a gradient heading and a moving network graphic on the right.
+   */
+  theme?: ('light' | 'dark') | null;
+  mediaPosition?: ('right' | 'left') | null;
+  eyebrow?: string | null;
+  heading?: string | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  links?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: string | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: string | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  linkStyle?: ('button' | 'underline') | null;
+  logo?: (string | null) | Media;
+  /**
+   * Paste a YouTube / Wistia / Vimeo embed URL (used if no file uploaded).
+   */
+  videoEmbedUrl?: string | null;
+  videoFile?: (string | null) | Media;
+  /**
+   * Pick a light color for the Light theme, or a dark color for the Dark theme.
+   */
+  background?: ('lightBlue' | 'white' | 'darkGradient' | 'darkNavy' | 'black') | null;
+  /**
+   * Shown centered below the section, e.g. "View More Success Stories".
+   */
+  bottomLink?: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: string | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: string | Post;
+        } | null);
+    url?: string | null;
+    label?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'textVideo';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureTabsBlock".
+ */
+export interface FeatureTabsBlock {
+  /**
+   * Dark theme uses the glass tab bar, gradient heading and a glowing dark card (like "See FarEye AI in Action").
+   */
+  theme?: ('light' | 'dark') | null;
+  eyebrow?: string | null;
+  /**
+   * Controls the left spacing of bullet lists in the dark card.
+   */
+  listIndent?: ('flush' | 'small' | 'medium') | null;
+  heading?: string | null;
+  tabs?:
+    | {
+        label: string;
+        subheading?: string | null;
+        body?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        stats?:
+          | {
+              name?: string | null;
+              value: string;
+              label: string;
+              id?: string | null;
+            }[]
+          | null;
+        image?: (string | null) | Media;
+        linkLabel?: string | null;
+        linkUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'featureTabs';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaBannerBlock".
+ */
+export interface CtaBannerBlock {
+  heading: string;
+  subheading?: string | null;
+  buttons?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: string | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: string | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Falls back to a plain pink background if empty.
+   */
+  backgroundImage?: (string | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ctaBanner';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "UpdatesCardsBlock".
+ */
+export interface UpdatesCardsBlock {
+  heading?: string | null;
+  cards?:
+    | {
+        image?: (string | null) | Media;
+        /**
+         * When present the image is dimmed. Tick "Coral" to colour a line.
+         */
+        overlayLines?:
+          | {
+              text: string;
+              highlight?: boolean | null;
+              id?: string | null;
+            }[]
+          | null;
+        badgeType?: string | null;
+        badgeCategory?: string | null;
+        title?: string | null;
+        action?: ('download' | 'watch') | null;
+        /**
+         * Optional. Defaults to "Download" / "Watch".
+         */
+        actionLabel?: string | null;
+        downloadUrl?: string | null;
+        /**
+         * YouTube / Wistia / Vimeo embed URL.
+         */
+        videoUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'updatesCards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SpotlightBlock".
+ */
+export interface SpotlightBlock {
+  heading?: string | null;
+  subheading?: string | null;
+  background?: ('lightBlue' | 'white' | 'pink' | 'grey') | null;
+  cardType?: ('structured' | 'image') | null;
+  cards?:
+    | {
+        /**
+         * Upload OR paste an image URL below.
+         */
+        image?: (string | null) | Media;
+        imageUrl?: string | null;
+        logo?: (string | null) | Media;
+        date?: string | null;
+        title?: string | null;
+        excerpt?: string | null;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  seeAllLabel?: string | null;
+  seeAllUrl?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'spotlight';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBannerBlock".
+ */
+export interface StatsBannerBlock {
+  heading: string;
+  subheading?: string | null;
+  stats?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  buttons?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: string | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: string | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  background?: ('white' | 'lightBlue' | 'dark') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'statsBanner';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialCardsBlock".
+ */
+export interface TestimonialCardsBlock {
+  heading?: string | null;
+  subheading?: string | null;
+  cards?:
+    | {
+        logo?: (string | null) | Media;
+        quote?: string | null;
+        author?: string | null;
+        metricValue?: string | null;
+        metricLabel?: string | null;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'testimonialCards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DifferentiatorsBlock".
+ */
+export interface DifferentiatorsBlock {
+  /**
+   * Dark theme shows a network background, a clickable accordion on the left and a swapping image on the right (like "What sets FarEye Apart?").
+   */
+  theme?: ('light' | 'dark') | null;
+  eyebrow?: string | null;
+  heading?: string | null;
+  subheading?: string | null;
+  illustration?: (string | null) | Media;
+  cards?:
+    | {
+        icon?: (string | null) | Media;
+        title: string;
+        description?: string | null;
+        image?: (string | null) | Media;
+        imageUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'differentiators';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DiagramSectionBlock".
+ */
+export interface DiagramSectionBlock {
+  eyebrow?: string | null;
+  heading?: string | null;
+  subheading?: string | null;
+  image?: (string | null) | Media;
+  /**
+   * Used if no image is uploaded above.
+   */
+  imageUrl?: string | null;
+  background?: ('white' | 'lightBlue' | 'dark') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'diagramSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ResourceHubBlock".
+ */
+export interface ResourceHubBlock {
+  eyebrow?: string | null;
+  heading?: string | null;
+  background?: ('darkGradient' | 'darkNavy' | 'black') | null;
+  featuredCards?:
+    | {
+        image?: (string | null) | Media;
+        imageUrl?: string | null;
+        title: string;
+        body?: string | null;
+        action?: ('watch' | 'read' | 'none') | null;
+        actionLabel?: string | null;
+        videoUrl?: string | null;
+        linkUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  sideCards?:
+    | {
+        image?: (string | null) | Media;
+        imageUrl?: string | null;
+        title: string;
+        body?: string | null;
+        action?: ('watch' | 'read' | 'none') | null;
+        actionLabel?: string | null;
+        videoUrl?: string | null;
+        linkUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'resourceHub';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PlatformCarouselBlock".
+ */
+export interface PlatformCarouselBlock {
+  autoplaySeconds?: number | null;
+  slides?:
+    | {
+        type: 'stats' | 'testimonial' | 'logos' | 'image';
+        indicatorLogo?: (string | null) | Media;
+        heading?: string | null;
+        body?: string | null;
+        subheading?: string | null;
+        ctaLabel?: string | null;
+        ctaUrl?: string | null;
+        backgroundImage?: (string | null) | Media;
+        stats?:
+          | {
+              value: string;
+              label: string;
+              id?: string | null;
+            }[]
+          | null;
+        gridHeading?: string | null;
+        gridHighlight?: string | null;
+        logos?:
+          | {
+              image: string | Media;
+              id?: string | null;
+            }[]
+          | null;
+        image?: (string | null) | Media;
+        company?: string | null;
+        quote?: string | null;
+        authorName?: string | null;
+        authorTitle?: string | null;
+        metricValue?: string | null;
+        metricLabel?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'platformCarousel';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1326,6 +1807,18 @@ export interface PagesSelect<T extends boolean = true> {
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
+        logoMarquee?: T | LogoMarqueeBlockSelect<T>;
+        textVideo?: T | TextVideoBlockSelect<T>;
+        featureTabs?: T | FeatureTabsBlockSelect<T>;
+        ctaBanner?: T | CtaBannerBlockSelect<T>;
+        updatesCards?: T | UpdatesCardsBlockSelect<T>;
+        spotlight?: T | SpotlightBlockSelect<T>;
+        statsBanner?: T | StatsBannerBlockSelect<T>;
+        testimonialCards?: T | TestimonialCardsBlockSelect<T>;
+        differentiators?: T | DifferentiatorsBlockSelect<T>;
+        diagramSection?: T | DiagramSectionBlockSelect<T>;
+        resourceHub?: T | ResourceHubBlockSelect<T>;
+        platformCarousel?: T | PlatformCarouselBlockSelect<T>;
       };
   meta?:
     | T
@@ -1422,6 +1915,352 @@ export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LogoMarqueeBlock_select".
+ */
+export interface LogoMarqueeBlockSelect<T extends boolean = true> {
+  heading?: T;
+  speed?: T;
+  spacing?: T;
+  size?: T;
+  bordered?: T;
+  logos?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TextVideoBlock_select".
+ */
+export interface TextVideoBlockSelect<T extends boolean = true> {
+  sectionHeading?: T;
+  sectionSubheading?: T;
+  theme?: T;
+  mediaPosition?: T;
+  eyebrow?: T;
+  heading?: T;
+  body?: T;
+  links?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        id?: T;
+      };
+  linkStyle?: T;
+  logo?: T;
+  videoEmbedUrl?: T;
+  videoFile?: T;
+  background?: T;
+  bottomLink?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureTabsBlock_select".
+ */
+export interface FeatureTabsBlockSelect<T extends boolean = true> {
+  theme?: T;
+  eyebrow?: T;
+  listIndent?: T;
+  heading?: T;
+  tabs?:
+    | T
+    | {
+        label?: T;
+        subheading?: T;
+        body?: T;
+        stats?:
+          | T
+          | {
+              name?: T;
+              value?: T;
+              label?: T;
+              id?: T;
+            };
+        image?: T;
+        linkLabel?: T;
+        linkUrl?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaBannerBlock_select".
+ */
+export interface CtaBannerBlockSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  buttons?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  backgroundImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "UpdatesCardsBlock_select".
+ */
+export interface UpdatesCardsBlockSelect<T extends boolean = true> {
+  heading?: T;
+  cards?:
+    | T
+    | {
+        image?: T;
+        overlayLines?:
+          | T
+          | {
+              text?: T;
+              highlight?: T;
+              id?: T;
+            };
+        badgeType?: T;
+        badgeCategory?: T;
+        title?: T;
+        action?: T;
+        actionLabel?: T;
+        downloadUrl?: T;
+        videoUrl?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SpotlightBlock_select".
+ */
+export interface SpotlightBlockSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  background?: T;
+  cardType?: T;
+  cards?:
+    | T
+    | {
+        image?: T;
+        imageUrl?: T;
+        logo?: T;
+        date?: T;
+        title?: T;
+        excerpt?: T;
+        url?: T;
+        id?: T;
+      };
+  seeAllLabel?: T;
+  seeAllUrl?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBannerBlock_select".
+ */
+export interface StatsBannerBlockSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  buttons?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  background?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialCardsBlock_select".
+ */
+export interface TestimonialCardsBlockSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  cards?:
+    | T
+    | {
+        logo?: T;
+        quote?: T;
+        author?: T;
+        metricValue?: T;
+        metricLabel?: T;
+        url?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DifferentiatorsBlock_select".
+ */
+export interface DifferentiatorsBlockSelect<T extends boolean = true> {
+  theme?: T;
+  eyebrow?: T;
+  heading?: T;
+  subheading?: T;
+  illustration?: T;
+  cards?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        image?: T;
+        imageUrl?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DiagramSectionBlock_select".
+ */
+export interface DiagramSectionBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  heading?: T;
+  subheading?: T;
+  image?: T;
+  imageUrl?: T;
+  background?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ResourceHubBlock_select".
+ */
+export interface ResourceHubBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  heading?: T;
+  background?: T;
+  featuredCards?:
+    | T
+    | {
+        image?: T;
+        imageUrl?: T;
+        title?: T;
+        body?: T;
+        action?: T;
+        actionLabel?: T;
+        videoUrl?: T;
+        linkUrl?: T;
+        id?: T;
+      };
+  sideCards?:
+    | T
+    | {
+        image?: T;
+        imageUrl?: T;
+        title?: T;
+        body?: T;
+        action?: T;
+        actionLabel?: T;
+        videoUrl?: T;
+        linkUrl?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PlatformCarouselBlock_select".
+ */
+export interface PlatformCarouselBlockSelect<T extends boolean = true> {
+  autoplaySeconds?: T;
+  slides?:
+    | T
+    | {
+        type?: T;
+        indicatorLogo?: T;
+        heading?: T;
+        body?: T;
+        subheading?: T;
+        ctaLabel?: T;
+        ctaUrl?: T;
+        backgroundImage?: T;
+        stats?:
+          | T
+          | {
+              value?: T;
+              label?: T;
+              id?: T;
+            };
+        gridHeading?: T;
+        gridHighlight?: T;
+        logos?:
+          | T
+          | {
+              image?: T;
+              id?: T;
+            };
+        image?: T;
+        company?: T;
+        quote?: T;
+        authorName?: T;
+        authorTitle?: T;
+        metricValue?: T;
+        metricLabel?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -2106,7 +2945,77 @@ export interface Header {
  */
 export interface Footer {
   id: string;
-  navItems?:
+  /**
+   * Footer uses light text, so pick a dark shade.
+   */
+  backgroundColor?: ('navy' | 'teal' | 'black' | 'blue' | 'plum') | null;
+  logo?: {
+    image?: (string | null) | Media;
+    text?: string | null;
+  };
+  ctaLink?: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: string | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: string | Post;
+        } | null);
+    url?: string | null;
+    label?: string | null;
+  };
+  columns?:
+    | {
+        title: string;
+        links?:
+          | {
+              link: {
+                type?: ('reference' | 'custom') | null;
+                newTab?: boolean | null;
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: string | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: string | Post;
+                    } | null);
+                url?: string | null;
+                label: string;
+              };
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  subscribe?: {
+    heading?: string | null;
+    placeholder?: string | null;
+    consentText?: string | null;
+    privacyLink?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: string | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: string | Post;
+          } | null);
+      url?: string | null;
+      label?: string | null;
+    };
+    buttonLabel?: string | null;
+  };
+  legalLinks?:
     | {
         link: {
           type?: ('reference' | 'custom') | null;
@@ -2130,6 +3039,14 @@ export interface Footer {
         id?: string | null;
       }[]
     | null;
+  social?: {
+    linkedin?: string | null;
+    twitter?: string | null;
+    facebook?: string | null;
+    youtube?: string | null;
+  };
+  copyrightText?: string | null;
+  rightsText?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2195,7 +3112,60 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
-  navItems?:
+  backgroundColor?: T;
+  logo?:
+    | T
+    | {
+        image?: T;
+        text?: T;
+      };
+  ctaLink?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+      };
+  columns?:
+    | T
+    | {
+        title?: T;
+        links?:
+          | T
+          | {
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    label?: T;
+                  };
+              id?: T;
+            };
+        id?: T;
+      };
+  subscribe?:
+    | T
+    | {
+        heading?: T;
+        placeholder?: T;
+        consentText?: T;
+        privacyLink?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        buttonLabel?: T;
+      };
+  legalLinks?:
     | T
     | {
         link?:
@@ -2209,6 +3179,16 @@ export interface FooterSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  social?:
+    | T
+    | {
+        linkedin?: T;
+        twitter?: T;
+        facebook?: T;
+        youtube?: T;
+      };
+  copyrightText?: T;
+  rightsText?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

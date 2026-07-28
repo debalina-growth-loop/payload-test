@@ -35,7 +35,7 @@ function items(data?: Header | null): Item[] {
   }))
 }
 
-function DesktopItem({ item }: { item: Item }) {
+function DesktopItem({ item, dark }: { item: Item; dark?: boolean }) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const hasChildren = Boolean(item.children?.length)
@@ -82,9 +82,15 @@ function DesktopItem({ item }: { item: Item }) {
   )
 }
 
+// Routes that use the dark, transparent navbar (overlaying a dark hero).
+// Add more paths here to give other pages the dark treatment.
+const DARK_NAV_ROUTES = ['/platform']
+
 export const Navbar: React.FC<{ data?: Header | null }> = ({ data }) => {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const pathname = usePathname()
+  const dark = DARK_NAV_ROUTES.some((r) => pathname === r || pathname.startsWith(r + '/'))
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -100,9 +106,26 @@ export const Navbar: React.FC<{ data?: Header | null }> = ({ data }) => {
   const showCta = cta && cta.enabled !== false && cta.link?.label
 
   return (
-    // Centered floating card: gaps on the sides, flush to the top
-    <div className="sticky top-0 z-50 px-4">
-      <header className="mx-auto max-w-[1360px] rounded-2xl bg-white shadow-[0_10px_30px_-12px_rgba(0,0,0,0.18)]">
+    // Light routes: sticky white card (takes flow space).
+    // Dark routes: fixed, so the navbar OVERLAYS the dark hero behind it.
+    <div className={`z-50 px-4 ${dark ? 'fixed inset-x-0 top-0' : 'sticky top-0'}`}>
+      <header
+        className={`mx-auto max-w-[1360px] rounded-2xl border transition-colors duration-300 ${
+          dark ? '' : 'border-transparent bg-white shadow-[0_10px_30px_-12px_rgba(0,0,0,0.18)]'
+        }`}
+        // Dark routes: FarEye's frosted white-glass navbar (from the inspected styles)
+        style={
+          dark
+            ? {
+                background: 'linear-gradient(8deg, #fff0, #fff2, #fff3)',
+                border: '1px solid #fff2',
+                backdropFilter: 'blur(15px)',
+                WebkitBackdropFilter: 'blur(15px)',
+                boxShadow: '0 0 2rem #0002',
+              }
+            : undefined
+        }
+      >
         <div
           className={`flex items-center justify-between px-6 transition-all duration-300 md:px-8 ${
             scrolled ? 'py-2' : 'py-3.5'
@@ -124,20 +147,22 @@ export const Navbar: React.FC<{ data?: Header | null }> = ({ data }) => {
                 <img
                   src={logoUrl}
                   alt={logo?.text || 'Logo'}
-                  className={`w-auto max-w-none object-left transition-all duration-300 ${
-                    scrolled ? 'h-9' : 'h-9'
-                  }`}
+                  className="h-9 w-auto max-w-none object-left transition-all duration-300"
+                  // On the dark navbar, render the logo pure white to match the dark hero
+                  style={dark ? { filter: 'brightness(0) invert(1)' } : undefined}
                 />
               </span>
             ) : (
-              <span className={scrolled ? 'hidden' : 'inline'}>{logo?.text || 'Logo'}</span>
+              <span className={`${scrolled ? 'hidden' : 'inline'} ${dark ? 'text-white' : ''}`}>
+                {logo?.text || 'Logo'}
+              </span>
             )}
           </Link>
 
           <nav className="hidden xl:block">
             <ul className="flex items-center gap-7">
               {list.map((item, i) => (
-                <DesktopItem key={i} item={item} />
+                <DesktopItem key={i} item={item} dark={dark} />
               ))}
             </ul>
           </nav>
@@ -145,26 +170,32 @@ export const Navbar: React.FC<{ data?: Header | null }> = ({ data }) => {
           {showCta && (
             <Link
               href={href(cta!.link as LinkShape)}
-              className="hidden rounded-full px-6 py-2.5 text-[1.05rem] font-bold text-white xl:inline-block"
+              className={`hidden rounded-full px-6 py-2.5 text-[1.05rem] font-bold xl:inline-block ${
+                dark ? 'text-[#06222c]' : 'text-white'
+              }`}
               style={{ backgroundColor: CORAL }}
             >
               {cta!.link!.label}
             </Link>
           )}
 
-          <button className="xl:hidden" aria-label="Menu" onClick={() => setMobileOpen((v) => !v)}>
+          <button
+            className={`xl:hidden ${dark ? 'text-white' : ''}`}
+            aria-label="Menu"
+            onClick={() => setMobileOpen((v) => !v)}
+          >
             {mobileOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
           </button>
         </div>
 
         {mobileOpen && (
           <div className="mx-auto max-w-[1360px] px-6 pb-4 xl:hidden">
-            <ul className="flex flex-col divide-y divide-gray-100">
+            <ul className={`flex flex-col divide-y ${dark ? 'divide-white/10' : 'divide-gray-100'}`}>
               {list.map((item, i) => (
                 <li key={i} className="py-1">
                   <Link
                     href={item.href}
-                    className="block py-2.5 text-lg font-semibold"
+                    className={`block py-2.5 text-lg font-semibold ${dark ? 'text-white' : ''}`}
                     onClick={() => setMobileOpen(false)}
                   >
                     {item.label}
@@ -173,7 +204,7 @@ export const Navbar: React.FC<{ data?: Header | null }> = ({ data }) => {
                     <Link
                       key={j}
                       href={c.href}
-                      className="block py-1.5 pl-4 text-base text-gray-600"
+                      className={`block py-1.5 pl-4 text-base ${dark ? 'text-white/70' : 'text-gray-600'}`}
                       onClick={() => setMobileOpen(false)}
                     >
                       {c.label}
