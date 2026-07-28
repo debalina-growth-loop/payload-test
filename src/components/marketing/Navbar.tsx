@@ -196,7 +196,13 @@ export const Navbar: React.FC<{ data?: Header | null }> = ({ data }) => {
                   <Link
                     href={item.href}
                     className={`block py-2.5 text-lg font-semibold ${dark ? 'text-white' : ''}`}
-                    onClick={() => setMobileOpen(false)}
+                    onClick={(e) => {
+                      if (item.children?.length) {
+                        e.preventDefault()
+                        return
+                      }
+                      setMobileOpen(false)
+                    }}
                   >
                     {item.label}
                   </Link>
