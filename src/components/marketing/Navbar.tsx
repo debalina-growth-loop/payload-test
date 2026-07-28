@@ -35,16 +35,38 @@ function items(data?: Header | null): Item[] {
   }))
 }
 
-function DesktopItem({ item, dark }: { item: Item; dark?: boolean }) {
+function DesktopItem({
+  item,
+  dark,
+  scrolled,
+}: {
+  item: Item
+  dark?: boolean
+  scrolled?: boolean
+}) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const hasChildren = Boolean(item.children?.length)
   const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href + '/'))
-  const labelClassName =
-    'flex items-center gap-1 py-2 text-[1.05rem] font-semibold text-gray-800 hover:text-[#FF7A64]'
+  const labelClassName = `flex items-center gap-1 py-2 text-[1.05rem] font-semibold hover:text-[#FF7A64] ${
+    dark ? 'text-white' : 'text-gray-800'
+  }`
 
   return (
-    <li className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+    <li
+      className="relative flex h-full items-center"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      {/* Dark navbar marks the current page with a coral rule flush to the top edge of the
+          card. The offset is the row's own padding (py-3.5 → py-2 on scroll) plus its border. */}
+      {dark && active && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 h-1 transition-[top] duration-300"
+          style={{ top: scrolled ? -9 : -15, background: CORAL }}
+        />
+      )}
       {hasChildren ? (
         // No real page backs this item (it's just a dropdown trigger), so it toggles the
         // dropdown instead of navigating to a 404.
@@ -61,7 +83,12 @@ function DesktopItem({ item, dark }: { item: Item; dark?: boolean }) {
           />
         </button>
       ) : (
-        <Link href={item.href} className={labelClassName} style={active ? { color: CORAL } : undefined}>
+        // On the dark navbar the coral rule above marks the active item, so the label stays white
+        <Link
+          href={item.href}
+          className={labelClassName}
+          style={active && !dark ? { color: CORAL } : undefined}
+        >
           {item.label}
         </Link>
       )}
@@ -84,7 +111,7 @@ function DesktopItem({ item, dark }: { item: Item; dark?: boolean }) {
 
 // Routes that use the dark, transparent navbar (overlaying a dark hero).
 // Add more paths here to give other pages the dark treatment.
-const DARK_NAV_ROUTES = ['/platform']
+const DARK_NAV_ROUTES = ['/platform', '/pilot']
 
 export const Navbar: React.FC<{ data?: Header | null }> = ({ data }) => {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -159,10 +186,12 @@ export const Navbar: React.FC<{ data?: Header | null }> = ({ data }) => {
             )}
           </Link>
 
-          <nav className="hidden xl:block">
-            <ul className="flex items-center gap-7">
+          {/* self-stretch so each item spans the full row height and the active rule can sit
+              flush against the top of the card */}
+          <nav className="hidden self-stretch xl:block">
+            <ul className="flex h-full items-center gap-7">
               {list.map((item, i) => (
-                <DesktopItem key={i} item={item} dark={dark} />
+                <DesktopItem key={i} item={item} dark={dark} scrolled={scrolled} />
               ))}
             </ul>
           </nav>
