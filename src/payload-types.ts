@@ -648,11 +648,28 @@ export interface BreadcrumbBlock {
  * via the `definition` "HeroSectionBlock".
  */
 export interface HeroSectionBlock {
-  type: 'video' | 'split' | 'none';
+  type: 'video' | 'gradient' | 'split' | 'none';
   /**
    * For "Background": full-bleed behind the content. For "Image left": shown in the left column. Accepts an image or a video file.
    */
   media?: (number | null) | Media;
+  /**
+   * 0 = left to right, 90 = bottom to top, 180 = right to left.
+   */
+  gradientAngle?: number | null;
+  /**
+   * At least 2 stops, in order. Hex values.
+   */
+  gradientColors?:
+    | {
+        color: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * A decorative graphic (e.g. grid lines) blended into the top half of the hero. For "Background" types it overlays the top of the media; for "Image left" it sits below the right-side content.
+   */
+  blendImage?: (number | null) | Media;
   /**
    * Heading, sub text, a checklist, or CTA buttons — add as many as you need.
    */
@@ -737,7 +754,7 @@ export interface CallToActionBlock {
           /**
            * Choose how the link should be rendered.
            */
-          appearance?: ('default' | 'outline') | null;
+          appearance?: ('default' | 'outline' | 'active') | null;
           rounded?: ('none' | 'md' | 'full') | null;
           /**
            * Hex. Leave blank for the style default.
@@ -1357,7 +1374,7 @@ export interface CtaBannerBlock {
           /**
            * Choose how the link should be rendered.
            */
-          appearance?: ('default' | 'outline') | null;
+          appearance?: ('default' | 'outline' | 'active') | null;
           rounded?: ('none' | 'md' | 'full') | null;
           /**
            * Hex. Leave blank for the style default.
@@ -1485,7 +1502,7 @@ export interface StatsBannerBlock {
           /**
            * Choose how the link should be rendered.
            */
-          appearance?: ('default' | 'outline') | null;
+          appearance?: ('default' | 'outline' | 'active') | null;
           rounded?: ('none' | 'md' | 'full') | null;
           /**
            * Hex. Leave blank for the style default.
@@ -2668,6 +2685,14 @@ export interface BreadcrumbBlockSelect<T extends boolean = true> {
 export interface HeroSectionBlockSelect<T extends boolean = true> {
   type?: T;
   media?: T;
+  gradientAngle?: T;
+  gradientColors?:
+    | T
+    | {
+        color?: T;
+        id?: T;
+      };
+  blendImage?: T;
   content?:
     | T
     | {
