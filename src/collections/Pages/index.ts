@@ -1,24 +1,10 @@
 import type { CollectionConfig } from 'payload'
 
+import { APIError } from 'payload'
+
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
-import { Archive } from '../../blocks/ArchiveBlock/config'
-import { CallToAction } from '../../blocks/CallToAction/config'
-import { Content } from '../../blocks/Content/config'
-import { FormBlock } from '../../blocks/Form/config'
-import { MediaBlock } from '../../blocks/MediaBlock/config'
-import { LogoMarquee } from '../../blocks/LogoMarquee/config'
-import { TextVideo } from '../../blocks/TextVideo/config'
-import { FeatureTabs } from '../../blocks/FeatureTabs/config'
-import { CtaBanner } from '../../blocks/CtaBanner/config'
-import { UpdatesCards } from '../../blocks/UpdatesCards/config'
-import { Spotlight } from '../../blocks/Spotlight/config'
-import { StatsBanner } from '../../blocks/StatsBanner/config'
-import { TestimonialCards } from '../../blocks/TestimonialCards/config'
-import { Differentiators } from '../../blocks/Differentiators/config'
-import { DiagramSection } from '../../blocks/DiagramSection/config'
-import { ResourceHub } from '../../blocks/ResourceHub/config'
-import { PlatformCarousel } from '../../blocks/PlatformCarousel/config'
+import { pageBlocks } from '@/blocks/pageBlocks'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -84,25 +70,7 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [
-                CallToAction,
-                Content,
-                MediaBlock,
-                Archive,
-                FormBlock,
-                LogoMarquee,
-                TextVideo,
-                FeatureTabs,
-                CtaBanner,
-                UpdatesCards,
-                Spotlight,
-                StatsBanner,
-                TestimonialCards,
-                Differentiators,
-                DiagramSection,
-                ResourceHub,
-                PlatformCarousel,
-              ],
+              blocks: pageBlocks,
               // Optional so a page can be just a hero (e.g. the marketing homepage)
               // with no body blocks.
               admin: {
@@ -149,6 +117,83 @@ export const Pages: CollectionConfig<'pages'> = {
       },
     },
     slugField(),
+    {
+      name: 'template',
+      type: 'group',
+      admin: {
+        position: 'sidebar',
+      },
+      fields: [
+        {
+          name: 'templateRef',
+          type: 'relationship',
+          relationTo: 'page-templates',
+          label: 'Page template',
+          admin: {
+            description: 'Optionally base this page on a reusable template.',
+          },
+        },
+        {
+          name: 'syncWithTemplate',
+          type: 'checkbox',
+          label: 'Keep synced with template',
+          defaultValue: false,
+          admin: {
+            condition: (_, siblingData) => Boolean(siblingData?.templateRef),
+            description:
+              "On: this page always renders the template's current blocks instead of its own. Off: use the button below to copy the template's blocks in once, then edit them independently.",
+          },
+        },
+        {
+          name: 'applyTemplate',
+          type: 'ui',
+          admin: {
+            condition: (_, siblingData) =>
+              Boolean(siblingData?.templateRef) && !siblingData?.syncWithTemplate,
+            components: {
+              Field: '@/components/ApplyTemplateButton#ApplyTemplateButton',
+            },
+          },
+        },
+      ],
+    },
+  ],
+  endpoints: [
+    {
+      path: '/:id/apply-template',
+      method: 'post',
+      handler: async (req) => {
+        if (!req.user) {
+          throw new APIError('Unauthorized', 401)
+        }
+
+        const { id } = req.routeParams as { id: string }
+        const data = (await req.json?.()) ?? {}
+        const { templateId } = data as { templateId?: string }
+
+        if (!templateId) {
+          throw new APIError('templateId is required', 400)
+        }
+
+        const template = await req.payload.findByID({
+          collection: 'page-templates',
+          id: templateId,
+          depth: 0,
+          req,
+        })
+
+        const layout = (template.layout ?? []).map(({ id: _blockId, ...block }) => block)
+
+        const updated = await req.payload.update({
+          collection: 'pages',
+          id,
+          data: { layout },
+          req,
+        })
+
+        return Response.json({ layout: updated.layout })
+      },
+    },
   ],
   hooks: {
     afterChange: [revalidatePage],

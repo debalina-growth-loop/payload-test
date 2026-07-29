@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     pages: Page;
+    'page-templates': PageTemplate;
     posts: Post;
     products: Product;
     media: Media;
@@ -91,6 +92,7 @@ export interface Config {
   };
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
+    'page-templates': PageTemplatesSelect<false> | PageTemplatesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
@@ -297,6 +299,16 @@ export interface Page {
    */
   generateSlug?: boolean | null;
   slug: string;
+  template?: {
+    /**
+     * Optionally base this page on a reusable template.
+     */
+    templateRef?: (number | null) | PageTemplate;
+    /**
+     * On: this page always renders the template's current blocks instead of its own. Off: use the button below to copy the template's blocks in once, then edit them independently.
+     */
+    syncWithTemplate?: boolean | null;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -1547,6 +1559,39 @@ export interface PlatformCarouselBlock {
   blockType: 'platformCarousel';
 }
 /**
+ * Reusable block layouts that pages can copy from or stay synced with.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-templates".
+ */
+export interface PageTemplate {
+  id: number;
+  name: string;
+  layout?:
+    | (
+        | CallToActionBlock
+        | ContentBlock
+        | MediaBlock
+        | ArchiveBlock
+        | FormBlock
+        | LogoMarqueeBlock
+        | TextVideoBlock
+        | FeatureTabsBlock
+        | CtaBannerBlock
+        | UpdatesCardsBlock
+        | SpotlightBlock
+        | StatsBannerBlock
+        | TestimonialCardsBlock
+        | DifferentiatorsBlock
+        | DiagramSectionBlock
+        | ResourceHubBlock
+        | PlatformCarouselBlock
+      )[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
@@ -1741,6 +1786,10 @@ export interface PayloadLockedDocument {
         value: number | Page;
       } | null)
     | ({
+        relationTo: 'page-templates';
+        value: number | PageTemplate;
+      } | null)
+    | ({
         relationTo: 'posts';
         value: number | Post;
       } | null)
@@ -1926,6 +1975,12 @@ export interface PagesSelect<T extends boolean = true> {
   publishedAt?: T;
   generateSlug?: T;
   slug?: T;
+  template?:
+    | T
+    | {
+        templateRef?: T;
+        syncWithTemplate?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -2359,6 +2414,36 @@ export interface PlatformCarouselBlockSelect<T extends boolean = true> {
       };
   id?: T;
   blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-templates_select".
+ */
+export interface PageTemplatesSelect<T extends boolean = true> {
+  name?: T;
+  layout?:
+    | T
+    | {
+        cta?: T | CallToActionBlockSelect<T>;
+        content?: T | ContentBlockSelect<T>;
+        mediaBlock?: T | MediaBlockSelect<T>;
+        archive?: T | ArchiveBlockSelect<T>;
+        formBlock?: T | FormBlockSelect<T>;
+        logoMarquee?: T | LogoMarqueeBlockSelect<T>;
+        textVideo?: T | TextVideoBlockSelect<T>;
+        featureTabs?: T | FeatureTabsBlockSelect<T>;
+        ctaBanner?: T | CtaBannerBlockSelect<T>;
+        updatesCards?: T | UpdatesCardsBlockSelect<T>;
+        spotlight?: T | SpotlightBlockSelect<T>;
+        statsBanner?: T | StatsBannerBlockSelect<T>;
+        testimonialCards?: T | TestimonialCardsBlockSelect<T>;
+        differentiators?: T | DifferentiatorsBlockSelect<T>;
+        diagramSection?: T | DiagramSectionBlockSelect<T>;
+        resourceHub?: T | ResourceHubBlockSelect<T>;
+        platformCarousel?: T | PlatformCarouselBlockSelect<T>;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
