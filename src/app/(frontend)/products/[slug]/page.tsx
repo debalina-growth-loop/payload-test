@@ -57,6 +57,16 @@ export default async function Page({ params: paramsPromise }: Args) {
     hideFooter: product.hideFooter,
   })
 
+  // A full-bleed Hero (video/gradient) always starts at the very top of the
+  // screen, so the header needs to float over it — unless a Header block
+  // already picked an explicit style.
+  const heroBlock = product.layout?.find((b) => b.blockType === 'heroSection') as
+    | { type?: string | null }
+    | undefined
+  if (heroBlock && ['video', 'gradient'].includes(heroBlock.type || '') && !header.variant) {
+    header.variant = 'glass'
+  }
+
   return (
     <SiteChrome header={header} footer={footer}>
       <PayloadRedirects disableNotFound url={url} />

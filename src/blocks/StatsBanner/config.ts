@@ -52,7 +52,7 @@ export const StatsBanner: Block = {
       ],
     },
     linkGroup({
-      appearances: ['default', 'outline'],
+      appearances: ['default', 'outline', 'active'],
       overrides: {
         name: 'buttons',
         label: 'Buttons',
