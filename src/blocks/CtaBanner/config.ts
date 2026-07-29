@@ -22,7 +22,7 @@ export const CtaBanner: Block = {
       label: 'Subheading (optional)',
     },
     linkGroup({
-      appearances: ['default', 'outline'],
+      appearances: ['default', 'outline', 'active'],
       overrides: {
         name: 'buttons',
         label: 'Buttons',
