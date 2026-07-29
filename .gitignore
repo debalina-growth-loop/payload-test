@@ -4,8 +4,15 @@ node_modules
 .DS_Store
 .env
 .next
+
+# Local baseline written by `pnpm s3:snap`
+.s3-media-snapshot.json
 next-env.d.ts
 .vercel
+
+# TypeScript incremental build cache ("incremental": true in tsconfig.json).
+# Regenerated on every build, so tracking it only produces merge conflicts.
+tsconfig.tsbuildinfo
 
 # Payload default media upload directory
 # public/media/

@@ -29,6 +29,7 @@ import { RowLabel as RowLabel_ec255a65fa6fa8d1faeb09cf35284224 } from '@/Header/
 import { BlocksNavLink as BlocksNavLink_68dccc5585c6f1df6b4ed68eb2cd249a } from '@/admin/components/BlocksNavLink'
 import { default as default_1a7510af427896d367a49dbf838d2de6 } from '@/components/BeforeDashboard'
 import { default as default_8a7ab0eb7ab5c511aba12e68480bfe5e } from '@/components/BeforeLogin'
+import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 import { default as default_edd7c7c90188625af4b019da64a605c3 } from '@/admin/views/Blocks'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
@@ -65,6 +66,7 @@ export const importMap = {
   "@/admin/components/BlocksNavLink#BlocksNavLink": BlocksNavLink_68dccc5585c6f1df6b4ed68eb2cd249a,
   "@/components/BeforeDashboard#default": default_1a7510af427896d367a49dbf838d2de6,
   "@/components/BeforeLogin#default": default_8a7ab0eb7ab5c511aba12e68480bfe5e,
+  "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,
   "@/admin/views/Blocks#default": default_edd7c7c90188625af4b019da64a605c3,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }
