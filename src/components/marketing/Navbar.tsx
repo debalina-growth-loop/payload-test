@@ -113,11 +113,18 @@ function DesktopItem({
 // Add more paths here to give other pages the dark treatment.
 const DARK_NAV_ROUTES = ['/platform', '/pilot']
 
-export const Navbar: React.FC<{ data?: Header | null }> = ({ data }) => {
+export const Navbar: React.FC<{ data?: Header | null; variant?: 'default' | 'glass' }> = ({
+  data,
+  variant,
+}) => {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
-  const dark = DARK_NAV_ROUTES.some((r) => pathname === r || pathname.startsWith(r + '/'))
+  // A page can opt into a specific style via a Header block; otherwise fall back
+  // to the route-based default (dark/glass on routes with a dark hero behind it).
+  const dark = variant
+    ? variant === 'glass'
+    : DARK_NAV_ROUTES.some((r) => pathname === r || pathname.startsWith(r + '/'))
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)

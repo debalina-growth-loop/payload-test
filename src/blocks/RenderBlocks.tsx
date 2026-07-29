@@ -21,6 +21,11 @@ import { ResourceHubComponent } from '@/blocks/ResourceHub/Component'
 import { PlatformCarouselComponent } from '@/blocks/PlatformCarousel/Component'
 
 const blockComponents = {
+  // Header/Footer are page-level chrome, extracted out before reaching this
+  // component (see extractChromeBlocks) — these entries exist only to satisfy
+  // the type/lookup below if one somehow slips through unfiltered.
+  headerBlock: () => null,
+  footerBlock: () => null,
   archive: ArchiveBlock,
   content: ContentBlock,
   cta: CallToActionBlock,
