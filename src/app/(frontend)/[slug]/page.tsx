@@ -64,7 +64,16 @@ export default async function Page({ params: paramsPromise }: Args) {
     return <PayloadRedirects url={url} />
   }
 
-  const { hero, layout } = page
+  const { hero, layout, template } = page
+
+  let blocks = layout
+
+  if (template?.syncWithTemplate && template?.templateRef) {
+    const templateId =
+      typeof template.templateRef === 'object' ? template.templateRef.id : template.templateRef
+    const templateDoc = await queryTemplateById({ id: String(templateId) })
+    blocks = templateDoc?.layout ?? []
+  }
 
   return (
     <article className="pt-16">
@@ -75,7 +84,7 @@ export default async function Page({ params: paramsPromise }: Args) {
       {draft && <LivePreviewListener />}
 
       <RenderHero {...hero} />
-      <RenderBlocks blocks={layout ?? []} />
+      <RenderBlocks blocks={blocks ?? []} />
     </article>
   )
 }
@@ -110,4 +119,17 @@ const queryPageBySlug = cache(async ({ slug }: { slug: string }) => {
   })
 
   return result.docs?.[0] || null
+})
+
+const queryTemplateById = cache(async ({ id }: { id: string }) => {
+  const payload = await getPayload({ config: configPromise })
+
+  // Templates have no draft/publish state of their own — this only renders
+  // the current live page, so trusted server-side access is appropriate.
+  return payload.findByID({
+    collection: 'page-templates',
+    id,
+    depth: 2,
+    overrideAccess: true,
+  })
 })

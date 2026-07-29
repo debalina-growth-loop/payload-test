@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url'
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
+import { PageTemplates } from './collections/PageTemplates'
 import { Posts } from './collections/Posts'
 import { Products } from './collections/Products'
 import { Users } from './collections/Users'
@@ -65,7 +66,7 @@ export default buildConfig({
       ssl: { rejectUnauthorized: false },
     },
   }),
-  collections: [Pages, Posts, Products, Media, Categories, Users],
+  collections: [Pages, PageTemplates, Posts, Products, Media, Categories, Users],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins,
