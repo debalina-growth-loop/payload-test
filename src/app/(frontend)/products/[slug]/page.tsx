@@ -8,6 +8,8 @@ import React, { cache } from 'react'
 
 import { ProductTemplate } from '@/components/ProductTemplate'
 import { generateMeta } from '@/utilities/generateMeta'
+import { extractChromeBlocks } from '@/utilities/extractChromeBlocks'
+import { SiteChrome } from '@/components/SiteChrome'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 
 export async function generateStaticParams() {
@@ -43,17 +45,26 @@ export default async function Page({ params: paramsPromise }: Args) {
   })
 
   if (!product) {
-    return <PayloadRedirects url={url} />
+    return (
+      <SiteChrome>
+        <PayloadRedirects url={url} />
+      </SiteChrome>
+    )
   }
 
+  const { header, footer, rest } = extractChromeBlocks(product.layout, {
+    hideHeader: product.hideHeader,
+    hideFooter: product.hideFooter,
+  })
+
   return (
-    <>
+    <SiteChrome header={header} footer={footer}>
       <PayloadRedirects disableNotFound url={url} />
 
       {draft && <LivePreviewListener />}
 
-      <ProductTemplate {...product} />
-    </>
+      <ProductTemplate {...product} layout={rest} />
+    </SiteChrome>
   )
 }
 

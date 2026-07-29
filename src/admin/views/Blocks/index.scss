@@ -1,0 +1,112 @@
+@import '@payloadcms/ui/scss';
+
+.blocks-overview {
+  padding: base(1.5);
+
+  &__hint {
+    max-width: 60rem;
+    margin-bottom: base(1);
+    color: var(--theme-elevation-500);
+  }
+
+  &__scroll {
+    overflow-x: auto;
+    border: 1px solid var(--theme-elevation-150);
+    border-radius: 4px;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+
+    th,
+    td {
+      padding: base(0.5) base(0.75);
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--theme-elevation-100);
+    }
+
+    th {
+      color: var(--theme-elevation-500);
+      font-weight: 600;
+      background: var(--theme-elevation-50);
+      white-space: nowrap;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  &__muted {
+    color: var(--theme-elevation-400);
+  }
+
+  &__usages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: base(0.4);
+  }
+
+  &__usage-link {
+    display: inline-flex;
+    align-items: center;
+    gap: base(0.3);
+    padding: 2px base(0.4);
+    border: 1px solid var(--theme-elevation-150);
+    border-radius: 4px;
+    white-space: nowrap;
+
+    &:hover {
+      background: var(--theme-elevation-50);
+    }
+  }
+
+  &__usage-collection {
+    color: var(--theme-elevation-400);
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+
+  details {
+    min-width: 12rem;
+
+    summary {
+      cursor: pointer;
+      color: var(--theme-elevation-600);
+      font-weight: 500;
+
+      &:hover {
+        color: var(--theme-elevation-1000);
+      }
+    }
+  }
+
+  &__field-tree {
+    margin: base(0.4) 0 0;
+    padding-left: base(0.8);
+    list-style: none;
+
+    li {
+      margin-bottom: base(0.2);
+    }
+
+    .blocks-overview__field-tree {
+      margin-top: base(0.2);
+      padding-left: base(0.9);
+      border-left: 1px solid var(--theme-elevation-100);
+    }
+  }
+
+  &__field-label {
+    margin-right: base(0.4);
+  }
+
+  &__field-type {
+    color: var(--theme-elevation-400);
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+}

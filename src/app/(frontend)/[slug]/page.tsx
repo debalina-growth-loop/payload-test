@@ -10,6 +10,8 @@ import { homeStatic } from '@/endpoints/seed/home-static'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
+import { extractChromeBlocks } from '@/utilities/extractChromeBlocks'
+import { SiteChrome } from '@/components/SiteChrome'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 
@@ -61,10 +63,14 @@ export default async function Page({ params: paramsPromise }: Args) {
   }
 
   if (!page) {
-    return <PayloadRedirects url={url} />
+    return (
+      <SiteChrome>
+        <PayloadRedirects url={url} />
+      </SiteChrome>
+    )
   }
 
-  const { hero, layout, template } = page
+  const { hero, layout, template, hideHeader, hideFooter } = page
 
   let blocks = layout
 
@@ -75,17 +81,21 @@ export default async function Page({ params: paramsPromise }: Args) {
     blocks = templateDoc?.layout ?? []
   }
 
+  const { header, footer, rest } = extractChromeBlocks(blocks, { hideHeader, hideFooter })
+
   return (
-    <article className="pt-16">
-      <PageClient />
-      {/* Allows redirects for valid pages too */}
-      <PayloadRedirects disableNotFound url={url} />
+    <SiteChrome header={header} footer={footer}>
+      <article className="pt-16">
+        <PageClient />
+        {/* Allows redirects for valid pages too */}
+        <PayloadRedirects disableNotFound url={url} />
 
-      {draft && <LivePreviewListener />}
+        {draft && <LivePreviewListener />}
 
-      <RenderHero {...hero} />
-      <RenderBlocks blocks={blocks ?? []} />
-    </article>
+        <RenderHero {...hero} />
+        <RenderBlocks blocks={rest} />
+      </article>
+    </SiteChrome>
   )
 }
 

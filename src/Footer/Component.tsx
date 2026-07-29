@@ -73,7 +73,7 @@ const BG_COLORS: Record<string, string> = {
   plum: '#2A1533',
 }
 
-export async function Footer() {
+export async function Footer({ variant }: { variant?: 'default' | 'glass' } = {}) {
   const data: FooterType = await getCachedGlobal('footer', 2)()
 
   const logo = data?.logo
@@ -83,7 +83,16 @@ export async function Footer() {
   const subscribe = data?.subscribe
   const legalLinks = data?.legalLinks || []
   const social = data?.social
-  const bg = BG_COLORS[data?.backgroundColor || 'navy'] ?? BG_COLORS.navy
+  const solidBg = BG_COLORS[data?.backgroundColor || 'navy'] ?? BG_COLORS.navy
+  // Glass: translucent + blurred so whatever sits above (e.g. a dark hero) shows through.
+  const footerStyle =
+    variant === 'glass'
+      ? {
+          backgroundColor: `${solidBg}99`,
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+        }
+      : { backgroundColor: solidBg }
 
   const socials = [
     { url: social?.linkedin, key: 'linkedin', label: 'LinkedIn' },
@@ -93,7 +102,7 @@ export async function Footer() {
   ].filter((s) => s.url)
 
   return (
-    <footer className="mt-auto w-full text-white" style={{ backgroundColor: bg }}>
+    <footer className="mt-auto w-full text-white" style={footerStyle}>
       <div className="mx-auto max-w-[1440px] pl-36 pr-26 py-[84px]">
         {/* Top: logo + CTA */}
         <div className="mb-[52px] flex flex-wrap items-center justify-between gap-6">

@@ -116,6 +116,32 @@ export const Pages: CollectionConfig<'pages'> = {
         position: 'sidebar',
       },
     },
+    {
+      type: 'row',
+      admin: { position: 'sidebar' },
+      fields: [
+        {
+          name: 'hideHeader',
+          type: 'checkbox',
+          label: 'Hide header',
+          defaultValue: false,
+          admin: {
+            width: '50%',
+            description: 'Skip the header entirely. Ignored if a Header block is in the layout.',
+          },
+        },
+        {
+          name: 'hideFooter',
+          type: 'checkbox',
+          label: 'Hide footer',
+          defaultValue: false,
+          admin: {
+            width: '50%',
+            description: 'Skip the footer entirely. Ignored if a Footer block is in the layout.',
+          },
+        },
+      ],
+    },
     slugField(),
     {
       name: 'template',

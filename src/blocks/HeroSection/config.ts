@@ -1,0 +1,49 @@
+import type { Block } from 'payload'
+
+import { CallToAction } from '../CallToAction/config'
+import { FeatureChecklist } from '../FeatureChecklist/config'
+import { StyledText } from '../StyledText/config'
+
+export const HeroSectionBlock: Block = {
+  slug: 'heroSection',
+  interfaceName: 'HeroSectionBlock',
+  labels: {
+    singular: 'Hero',
+    plural: 'Heroes',
+  },
+  fields: [
+    {
+      name: 'type',
+      type: 'select',
+      label: 'Hero type',
+      defaultValue: 'video',
+      required: true,
+      options: [
+        { label: 'Background video/image (full-bleed)', value: 'video' },
+        { label: 'Image left / content right', value: 'split' },
+        { label: 'None — content only, no media', value: 'none' },
+      ],
+    },
+    {
+      name: 'media',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Background / side image or video',
+      admin: {
+        condition: (_, { type } = {}) => ['video', 'split'].includes(type),
+        description:
+          'For "Background": full-bleed behind the content. For "Image left": shown in the left column. Accepts an image or a video file.',
+      },
+    },
+    {
+      name: 'content',
+      type: 'blocks',
+      label: 'Content (left side)',
+      admin: {
+        initCollapsed: true,
+        description: 'Heading, sub text, a checklist, or CTA buttons — add as many as you need.',
+      },
+      blocks: [StyledText, FeatureChecklist, CallToAction],
+    },
+  ],
+}
