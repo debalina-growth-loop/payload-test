@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { APIError } from 'payload'
+import type { Page } from '@/payload-types'
 
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
@@ -155,6 +156,9 @@ export const Pages: CollectionConfig<'pages'> = {
           type: 'relationship',
           relationTo: 'page-templates',
           label: 'Page template',
+          filterOptions: {
+            or: [{ usableFor: { in: ['pages'] } }, { usableFor: { exists: false } }],
+          },
           admin: {
             description: 'Optionally base this page on a reusable template.',
           },
@@ -210,10 +214,13 @@ export const Pages: CollectionConfig<'pages'> = {
 
         const layout = (template.layout ?? []).map(({ id: _blockId, ...block }) => block)
 
+        // A template's block set is a superset of Pages['layout'] (it can also
+        // hold product-only blocks) — Payload validates the actual write
+        // against Pages' own configured block types at runtime.
         const updated = await req.payload.update({
           collection: 'pages',
           id,
-          data: { layout },
+          data: { layout: layout as Page['layout'] },
           req,
         })
 

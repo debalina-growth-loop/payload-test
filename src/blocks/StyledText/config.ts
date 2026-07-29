@@ -31,6 +31,10 @@ export const StyledText: Block = {
             { label: '3XL', value: '3xl' },
             { label: '4XL', value: '4xl' },
             { label: '5XL', value: '5xl' },
+            { label: '6XL', value: '6xl' },
+            { label: '7XL', value: '7xl' },
+            { label: '8XL', value: '8xl' },
+            { label: '9XL', value: '9xl' },
           ],
         },
         {

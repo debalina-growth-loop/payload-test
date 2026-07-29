@@ -1,7 +1,9 @@
 import type { Block } from 'payload'
 
+import { ButtonBlock } from '../ButtonBlock/config'
 import { CallToAction } from '../CallToAction/config'
 import { FeatureChecklist } from '../FeatureChecklist/config'
+import { LinksBlock } from '../LinksBlock/config'
 import { StyledText } from '../StyledText/config'
 
 export const HeroSectionBlock: Block = {
@@ -86,7 +88,7 @@ export const HeroSectionBlock: Block = {
         initCollapsed: true,
         description: 'Heading, sub text, a checklist, or CTA buttons — add as many as you need.',
       },
-      blocks: [StyledText, FeatureChecklist, CallToAction],
+      blocks: [StyledText, FeatureChecklist, CallToAction, ButtonBlock, LinksBlock],
     },
   ],
 }

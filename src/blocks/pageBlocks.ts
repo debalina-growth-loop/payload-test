@@ -1,10 +1,13 @@
 import { Archive } from './ArchiveBlock/config'
+import { ButtonBlock } from './ButtonBlock/config'
 import { CallToAction } from './CallToAction/config'
 import { Content } from './Content/config'
 import { FooterBlock } from './FooterBlock/config'
 import { FormBlock } from './Form/config'
 import { HeaderBlock } from './HeaderBlock/config'
+import { LinksBlock } from './LinksBlock/config'
 import { MediaBlock } from './MediaBlock/config'
+import { StackBlock } from './Stack/config'
 import { LogoMarquee } from './LogoMarquee/config'
 import { TextVideo } from './TextVideo/config'
 import { FeatureTabs } from './FeatureTabs/config'
@@ -24,6 +27,9 @@ export const pageBlocks = [
   HeaderBlock,
   FooterBlock,
   CallToAction,
+  ButtonBlock,
+  LinksBlock,
+  StackBlock,
   Content,
   MediaBlock,
   Archive,

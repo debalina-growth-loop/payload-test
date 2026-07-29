@@ -5,8 +5,17 @@
 
   &__hint {
     max-width: 60rem;
-    margin-bottom: base(1);
+    margin-bottom: base(1.5);
     color: var(--theme-elevation-500);
+  }
+
+  &__group {
+    margin-bottom: base(2);
+
+    & h4 {
+      margin: 0 0 base(0.5);
+      color: var(--theme-elevation-800);
+    }
   }
 
   &__scroll {
