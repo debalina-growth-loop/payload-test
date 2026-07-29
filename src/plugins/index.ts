@@ -3,6 +3,7 @@ import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
+import { s3Storage } from '@payloadcms/storage-s3'
 import { Plugin } from 'payload'
 import { revalidateRedirects } from '@/hooks/revalidateRedirects'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
@@ -11,6 +12,7 @@ import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
 
 import { Page, Post } from '@/payload-types'
+import { getS3MediaUrl, S3_MEDIA_PREFIX } from '@/utilities/s3Media'
 import { getServerSideURL } from '@/utilities/getURL'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
@@ -86,6 +88,29 @@ export const plugins: Plugin[] = [
     searchOverrides: {
       fields: ({ defaultFields }) => {
         return [...defaultFields, ...searchFields]
+      },
+    },
+  }),
+  s3Storage({
+    collections: {
+      media: {
+        // Scoping every object under `media/` lets a public-read bucket policy
+        // target `media/*` instead of exposing the whole bucket.
+        prefix: S3_MEDIA_PREFIX,
+        // Serve files straight from S3 rather than proxying them through
+        // /api/media/file/*. Requires public read access on the bucket prefix.
+        disablePayloadAccessControl: true,
+        // The built-in URL generator relies on `config.endpoint`, which we leave
+        // unset, so build the virtual-hosted URL ourselves.
+        generateFileURL: ({ filename, prefix }) => getS3MediaUrl(filename, prefix),
+      },
+    },
+    bucket: process.env.S3_BUCKET || '',
+    config: {
+      region: process.env.S3_REGION,
+      credentials: {
+        accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
+        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
       },
     },
   }),

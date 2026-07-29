@@ -24,7 +24,11 @@ export const VideoMedia: React.FC<MediaProps> = (props) => {
   }, [])
 
   if (resource && typeof resource === 'object') {
-    const { filename } = resource
+    // Use the stored `url` rather than building `/media/<filename>`: media lives
+    // in S3 now, and that local path 404s.
+    const src = getMediaUrl(resource.url, resource.updatedAt)
+
+    if (!src) return null
 
     return (
       <video
@@ -37,7 +41,7 @@ export const VideoMedia: React.FC<MediaProps> = (props) => {
         playsInline
         ref={videoRef}
       >
-        <source src={getMediaUrl(`/media/${filename}`)} />
+        <source src={src} />
       </video>
     )
   }

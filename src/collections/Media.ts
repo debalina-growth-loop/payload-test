@@ -5,14 +5,9 @@ import {
   InlineToolbarFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
-import path from 'path'
-import { fileURLToPath } from 'url'
-
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
-
-const filename = fileURLToPath(import.meta.url)
-const dirname = path.dirname(filename)
+import { getS3MediaUrl } from '../utilities/s3Media'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -40,9 +35,18 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
-    // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
-    staticDir: path.resolve(dirname, '../../public/media'),
-    adminThumbnail: 'thumbnail',
+    // Files are stored in S3 by the s3Storage plugin, so there is no local staticDir.
+    // Passing the size name as a string is not enough here: Payload would build
+    // `thumbnailURL` from the *stored* size URL, which still points at the disabled
+    // `/api/media/file/*` route. Build the bucket URL from the filename instead.
+    adminThumbnail: ({ doc }) => {
+      const sizes = doc?.sizes as Record<string, { filename?: null | string }> | undefined
+      const filename = sizes?.thumbnail?.filename || doc?.filename
+
+      if (typeof filename !== 'string') return null
+
+      return getS3MediaUrl(filename, doc?.prefix as null | string | undefined)
+    },
     focalPoint: true,
     imageSizes: [
       {

@@ -6,10 +6,15 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 import { redirects } from './redirects'
+import { getS3BucketHost } from './src/utilities/s3Media'
 
 const NEXT_PUBLIC_SERVER_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
   : process.env.__NEXT_PRIVATE_ORIGIN || 'http://localhost:3000'
+
+// Throws if any S3 variable is missing, failing the build instead of silently
+// baking `https://.s3..amazonaws.com/...` into every prerendered page.
+const S3_BUCKET_HOST = getS3BucketHost()
 
 const nextConfig: NextConfig = {
   // Temporarily required on Windows until Next.js fixes Turbopack Sass resolution.
@@ -33,6 +38,8 @@ const nextConfig: NextConfig = {
           protocol: url.protocol.replace(':', '') as 'http' | 'https',
         }
       }),
+      // Media is served directly from S3, so the bucket host must be allowed here.
+      { hostname: S3_BUCKET_HOST, protocol: 'https' as const },
     ],
   },
   webpack: (webpackConfig) => {
