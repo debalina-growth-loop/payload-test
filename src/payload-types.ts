@@ -161,7 +161,7 @@ export interface Page {
   id: number;
   title: string;
   hero: {
-    type: 'none' | 'marketing' | 'platform' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'video';
+    type: 'none' | 'marketing' | 'platform' | 'pilot' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'video';
     prefix?: string | null;
     highlights?:
       | {
@@ -169,9 +169,50 @@ export interface Page {
           id?: string | null;
         }[]
       | null;
+    /**
+     * Wrap words in **double asterisks** to emphasise them (Pilot hero only).
+     */
     subtitle?: string | null;
     illustration?: (number | null) | Media;
     background?: (number | null) | Media;
+    headlineSuffix?: string | null;
+    /**
+     * The strip loops seamlessly — you only need to enter each item once.
+     */
+    tickerItems?:
+      | {
+          text: string;
+          accent?: boolean | null;
+          liveDot?: boolean | null;
+          id?: string | null;
+        }[]
+      | null;
+    trustLabel?: string | null;
+    trustItems?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    pilotConsole?: {
+      label?: string | null;
+      meta?: string | null;
+      footerLeft?: string | null;
+      footerRight?: string | null;
+      /**
+       * These cycle through the console as a live feed, oldest scrolling off.
+       */
+      logs?:
+        | {
+            time?: string | null;
+            tag: string;
+            tone?: ('validate' | 'dispatch' | 'execute' | 'close') | null;
+            value?: string | null;
+            message: string;
+            id?: string | null;
+          }[]
+        | null;
+    };
     richText?: {
       root: {
         type: string;
@@ -1801,6 +1842,40 @@ export interface PagesSelect<T extends boolean = true> {
         subtitle?: T;
         illustration?: T;
         background?: T;
+        headlineSuffix?: T;
+        tickerItems?:
+          | T
+          | {
+              text?: T;
+              accent?: T;
+              liveDot?: T;
+              id?: T;
+            };
+        trustLabel?: T;
+        trustItems?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        pilotConsole?:
+          | T
+          | {
+              label?: T;
+              meta?: T;
+              footerLeft?: T;
+              footerRight?: T;
+              logs?:
+                | T
+                | {
+                    time?: T;
+                    tag?: T;
+                    tone?: T;
+                    value?: T;
+                    message?: T;
+                    id?: T;
+                  };
+            };
         richText?: T;
         links?:
           | T

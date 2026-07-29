@@ -6,6 +6,7 @@ import { HighImpactHero } from '@/heros/HighImpact'
 import { LowImpactHero } from '@/heros/LowImpact'
 import { MediumImpactHero } from '@/heros/MediumImpact'
 import { MarketingHero } from '@/heros/Marketing'
+import { PilotHero } from '@/heros/Pilot'
 import { PlatformHero } from '@/heros/Platform'
 import { VideoHero } from '@/heros/Video'
 
@@ -14,6 +15,7 @@ const heroes = {
   lowImpact: LowImpactHero,
   mediumImpact: MediumImpactHero,
   marketing: MarketingHero,
+  pilot: PilotHero,
   platform: PlatformHero,
   video: VideoHero,
 }
