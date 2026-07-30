@@ -2,13 +2,13 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Field } from 'payload'
 
-import { templateBlocks } from '@/blocks/templateBlocks'
+import { allBlocks } from '@/blocks/allBlocks'
 
 // Blocks that don't stack as normal content — they're page-level chrome or
 // the hero section — grouped separately from everyday content blocks.
 const LAYOUT_BLOCK_SLUGS = new Set(['headerBlock', 'footerBlock', 'breadcrumb', 'heroSection'])
 
-function groupFor(block: (typeof templateBlocks)[number]): string {
+function groupFor(block: (typeof allBlocks)[number]): string {
   const explicitGroup = (block.admin as { group?: string } | undefined)?.group
   if (explicitGroup) return explicitGroup
   if (LAYOUT_BLOCK_SLUGS.has(block.slug)) return 'Layout & hero blocks'
@@ -117,7 +117,7 @@ export async function BlocksList() {
   pages.forEach((p) => registerUsage(usageMap, 'pages', p as never))
   products.forEach((p) => registerUsage(usageMap, 'products', p as never))
 
-  const rows = templateBlocks.map((block) => ({
+  const rows = allBlocks.map((block) => ({
     slug: block.slug,
     label: block.labels?.singular ? String(block.labels.singular) : block.slug,
     group: groupFor(block),
