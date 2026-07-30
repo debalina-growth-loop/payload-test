@@ -3,7 +3,7 @@ import React from 'react'
 import type { HeroSectionBlock as HeroSectionBlockProps } from '@/payload-types'
 
 import { Media } from '@/components/Media'
-import { RenderProductBlocks } from '@/blocks/RenderProductBlocks'
+import { RenderHeroContent } from './RenderHeroContent'
 
 export const HeroSectionBlockComponent: React.FC<HeroSectionBlockProps> = ({
   blendImage,
@@ -46,14 +46,14 @@ export const HeroSectionBlockComponent: React.FC<HeroSectionBlockProps> = ({
         </div>
 
         {hasBlend && (
-          <div className="absolute inset-x-0 top-0 -z-10 h-1/2 mix-blend-screen">
-            <Media resource={blendImage} fill imgClassName="h-full w-full object-cover" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[50vh] opacity-60">
+            <Media resource={blendImage} fill imgClassName="h-full w-full object-contain object-top" />
           </div>
         )}
 
         <div className="container">
           <div className="max-w-xl">
-            <RenderProductBlocks blocks={content ?? []} />
+            <RenderHeroContent blocks={content ?? []} />
           </div>
         </div>
       </div>
@@ -73,11 +73,11 @@ export const HeroSectionBlockComponent: React.FC<HeroSectionBlockProps> = ({
           )}
         </div>
         <div className="order-1 lg:order-2">
-          <RenderProductBlocks blocks={content ?? []} />
+          <RenderHeroContent blocks={content ?? []} />
 
           {hasBlend && (
-            <div className="pointer-events-none relative mt-6 h-48 w-full mix-blend-screen">
-              <Media resource={blendImage} fill imgClassName="h-full w-full object-cover" />
+            <div className="pointer-events-none relative mt-6 h-48 w-full opacity-60">
+              <Media resource={blendImage} fill imgClassName="h-full w-full object-contain object-top" />
             </div>
           )}
         </div>
@@ -88,7 +88,7 @@ export const HeroSectionBlockComponent: React.FC<HeroSectionBlockProps> = ({
   return (
     <div className="container py-16">
       <div className="max-w-xl">
-        <RenderProductBlocks blocks={content ?? []} />
+        <RenderHeroContent blocks={content ?? []} />
       </div>
     </div>
   )

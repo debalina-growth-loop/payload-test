@@ -52,20 +52,24 @@ export default async function Page({ params: paramsPromise }: Args) {
     )
   }
 
-  const { header, footer, rest } = extractChromeBlocks(product.layout, {
+  const { template } = product
+
+  let blocks = product.layout
+
+  if (template?.syncWithTemplate && template?.templateRef) {
+    const templateId =
+      typeof template.templateRef === 'object' ? template.templateRef.id : template.templateRef
+    const templateDoc = await queryTemplateById({ id: String(templateId) })
+    // A template's block set is a superset of Product['layout'], so
+    // RenderProductBlocks — not this narrower type — decides how each block
+    // type actually renders.
+    blocks = (templateDoc?.layout ?? []) as typeof blocks
+  }
+
+  const { header, footer, rest } = extractChromeBlocks(blocks, {
     hideHeader: product.hideHeader,
     hideFooter: product.hideFooter,
   })
-
-  // A full-bleed Hero (video/gradient) always starts at the very top of the
-  // screen, so the header needs to float over it — unless a Header block
-  // already picked an explicit style.
-  const heroBlock = product.layout?.find((b) => b.blockType === 'heroSection') as
-    | { type?: string | null }
-    | undefined
-  if (heroBlock && ['video', 'gradient'].includes(heroBlock.type || '') && !header.variant) {
-    header.variant = 'glass'
-  }
 
   return (
     <SiteChrome header={header} footer={footer}>
@@ -107,4 +111,17 @@ const queryProductBySlug = cache(async ({ slug }: { slug: string }) => {
   })
 
   return result.docs?.[0] || null
+})
+
+const queryTemplateById = cache(async ({ id }: { id: string }) => {
+  const payload = await getPayload({ config: configPromise })
+
+  // Templates have no draft/publish state of their own — this only renders
+  // the current live product, so trusted server-side access is appropriate.
+  return payload.findByID({
+    collection: 'page-templates',
+    id,
+    depth: 2,
+    overrideAccess: true,
+  })
 })

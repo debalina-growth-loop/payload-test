@@ -1,62 +1,23 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import type { Block, Field } from 'payload'
+import type { Field } from 'payload'
 
-import { AnnouncementBanner } from '@/blocks/AnnouncementBanner/config'
-import { Archive } from '@/blocks/ArchiveBlock/config'
-import { Banner } from '@/blocks/Banner/config'
-import { CallToAction } from '@/blocks/CallToAction/config'
-import { Code } from '@/blocks/Code/config'
-import { Content } from '@/blocks/Content/config'
-import { CtaBanner } from '@/blocks/CtaBanner/config'
-import { DiagramSection } from '@/blocks/DiagramSection/config'
-import { Differentiators } from '@/blocks/Differentiators/config'
-import { FeatureChecklist } from '@/blocks/FeatureChecklist/config'
-import { FeatureTabs } from '@/blocks/FeatureTabs/config'
-import { FormBlock } from '@/blocks/Form/config'
-import { IntegrationsList } from '@/blocks/IntegrationsList/config'
-import { LogoMarquee } from '@/blocks/LogoMarquee/config'
-import { MediaBlock } from '@/blocks/MediaBlock/config'
-import { PlatformCarousel } from '@/blocks/PlatformCarousel/config'
-import { ResourceHub } from '@/blocks/ResourceHub/config'
-import { SectionHeading } from '@/blocks/SectionHeading/config'
-import { SpecsTable } from '@/blocks/SpecsTable/config'
-import { Spotlight } from '@/blocks/Spotlight/config'
-import { StatsBanner } from '@/blocks/StatsBanner/config'
-import { TestimonialCards } from '@/blocks/TestimonialCards/config'
-import { TextVideo } from '@/blocks/TextVideo/config'
-import { TrustBadges } from '@/blocks/TrustBadges/config'
-import { UpdatesCards } from '@/blocks/UpdatesCards/config'
+import { templateBlocks } from '@/blocks/templateBlocks'
 
-// The full block catalog — every block available anywhere in the site (Pages, Products).
-// Pulled from the real block configs so this view can't drift out of sync with the code.
-const ALL_BLOCKS: Block[] = [
-  AnnouncementBanner,
-  Archive,
-  Banner,
-  CallToAction,
-  Code,
-  Content,
-  CtaBanner,
-  DiagramSection,
-  Differentiators,
-  FeatureChecklist,
-  FeatureTabs,
-  FormBlock,
-  IntegrationsList,
-  LogoMarquee,
-  MediaBlock,
-  PlatformCarousel,
-  ResourceHub,
-  SectionHeading,
-  SpecsTable,
-  Spotlight,
-  StatsBanner,
-  TestimonialCards,
-  TextVideo,
-  TrustBadges,
-  UpdatesCards,
-]
+// Blocks that don't stack as normal content — they're page-level chrome or
+// the hero section — grouped separately from everyday content blocks.
+const LAYOUT_BLOCK_SLUGS = new Set(['headerBlock', 'footerBlock', 'breadcrumb', 'heroSection'])
+
+function groupFor(block: (typeof templateBlocks)[number]): string {
+  const explicitGroup = (block.admin as { group?: string } | undefined)?.group
+  if (explicitGroup) return explicitGroup
+  if (LAYOUT_BLOCK_SLUGS.has(block.slug)) return 'Layout & hero blocks'
+  return 'Content blocks'
+}
+
+// Fixed display order so the catalog reads top-to-bottom the way you'd build
+// a page: chrome/hero first, then everyday content, then product-only extras.
+const GROUP_ORDER = ['Layout & hero blocks', 'Content blocks', 'Product blocks']
 
 type FieldSummary = {
   key: string
@@ -85,8 +46,7 @@ function describeFields(fields: Field[] | undefined, prefix = ''): FieldSummary[
     }
 
     const name = 'name' in field ? field.name : undefined
-    const label =
-      (typeof field.label === 'string' && field.label) || name || field.type
+    const label = (typeof field.label === 'string' && field.label) || name || field.type
 
     const entry: FieldSummary = {
       key: `${prefix}${name || field.type}`,
@@ -157,68 +117,95 @@ export async function BlocksList() {
   pages.forEach((p) => registerUsage(usageMap, 'pages', p as never))
   products.forEach((p) => registerUsage(usageMap, 'products', p as never))
 
-  const rows = ALL_BLOCKS.map((block) => ({
+  const rows = templateBlocks.map((block) => ({
     slug: block.slug,
     label: block.labels?.singular ? String(block.labels.singular) : block.slug,
+    group: groupFor(block),
     fields: describeFields(block.fields),
     usages: usageMap.get(block.slug) ?? [],
-  })).sort((a, b) => b.usages.length - a.usages.length || a.label.localeCompare(b.label))
+  }))
+
+  const groups = new Map<string, typeof rows>()
+  rows.forEach((row) => {
+    if (!groups.has(row.group)) groups.set(row.group, [])
+    groups.get(row.group)!.push(row)
+  })
+
+  const orderedGroups = [
+    ...GROUP_ORDER.filter((g) => groups.has(g)),
+    ...Array.from(groups.keys()).filter((g) => !GROUP_ORDER.includes(g)),
+  ]
 
   return (
     <div className="blocks-overview">
       <p className="blocks-overview__hint">
-        Every block type available in the page/product builder — its fields (what you can
-        control) and where it&apos;s currently used. Editing a block happens inside the page or
-        product that contains it — click a usage below to jump straight to it.
+        Every block type available across the page/product builder — pulled directly from the
+        shared block list, so this can&apos;t drift out of sync with what&apos;s actually
+        selectable. Editing a block happens inside the page or product that contains it — click a
+        usage below to jump straight to it.
       </p>
-      <div className="blocks-overview__scroll">
-        <table className="blocks-overview__table">
-          <thead>
-            <tr>
-              <th>Block</th>
-              <th>Slug</th>
-              <th>Structure (what it controls)</th>
-              <th>Used in</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr key={row.slug}>
-                <td>{row.label}</td>
-                <td>
-                  <code>{row.slug}</code>
-                </td>
-                <td>
-                  <details>
-                    <summary>{row.fields.length} field{row.fields.length === 1 ? '' : 's'}</summary>
-                    <FieldTree fields={row.fields} />
-                  </details>
-                </td>
-                <td>
-                  {row.usages.length === 0 ? (
-                    <span className="blocks-overview__muted">Not used yet</span>
-                  ) : (
-                    <div className="blocks-overview__usages">
-                      {row.usages.map((u, i) => (
-                        <a
-                          key={i}
-                          href={`/admin/collections/${u.collection}/${u.id}`}
-                          className="blocks-overview__usage-link"
-                        >
-                          {u.title}
-                          <span className="blocks-overview__usage-collection">
-                            {u.collection === 'pages' ? 'Page' : 'Product'}
-                          </span>
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+
+      {orderedGroups.map((groupName) => {
+        const groupRows = groups
+          .get(groupName)!
+          .sort((a, b) => b.usages.length - a.usages.length || a.label.localeCompare(b.label))
+
+        return (
+          <div className="blocks-overview__group" key={groupName}>
+            <h4>{`${groupName} (${groupRows.length})`}</h4>
+            <div className="blocks-overview__scroll">
+              <table className="blocks-overview__table">
+                <thead>
+                  <tr>
+                    <th>Block</th>
+                    <th>Slug</th>
+                    <th>Structure (what it controls)</th>
+                    <th>Used in</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {groupRows.map((row) => (
+                    <tr key={row.slug}>
+                      <td>{row.label}</td>
+                      <td>
+                        <code>{row.slug}</code>
+                      </td>
+                      <td>
+                        <details>
+                          <summary>
+                            {row.fields.length} field{row.fields.length === 1 ? '' : 's'}
+                          </summary>
+                          <FieldTree fields={row.fields} />
+                        </details>
+                      </td>
+                      <td>
+                        {row.usages.length === 0 ? (
+                          <span className="blocks-overview__muted">Not used yet</span>
+                        ) : (
+                          <div className="blocks-overview__usages">
+                            {row.usages.map((u, i) => (
+                              <a
+                                key={i}
+                                href={`/admin/collections/${u.collection}/${u.id}`}
+                                className="blocks-overview__usage-link"
+                              >
+                                {u.title}
+                                <span className="blocks-overview__usage-collection">
+                                  {u.collection === 'pages' ? 'Page' : 'Product'}
+                                </span>
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )
+      })}
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '../../access/authenticated'
-import { pageBlocks } from '@/blocks/pageBlocks'
+import { templateBlocks } from '@/blocks/templateBlocks'
 
 export const PageTemplates: CollectionConfig<'page-templates'> = {
   slug: 'page-templates',
@@ -23,9 +23,22 @@ export const PageTemplates: CollectionConfig<'page-templates'> = {
       required: true,
     },
     {
+      name: 'usableFor',
+      type: 'select',
+      hasMany: true,
+      options: [
+        { label: 'Pages', value: 'pages' },
+        { label: 'Products', value: 'products' },
+      ],
+      defaultValue: ['pages', 'products'],
+      admin: {
+        description: 'Which collections can pick this template.',
+      },
+    },
+    {
       name: 'layout',
       type: 'blocks',
-      blocks: pageBlocks,
+      blocks: templateBlocks,
       admin: {
         initCollapsed: true,
       },

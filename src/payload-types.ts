@@ -254,6 +254,10 @@ export interface Page {
              * Choose how the link should be rendered.
              */
             appearance?: ('default' | 'outline') | null;
+            /**
+             * Scales height, padding, font size, and border thickness together.
+             */
+            size?: ('sm' | 'default' | 'lg' | 'xl') | null;
             rounded?: ('none' | 'md' | 'full') | null;
             /**
              * Hex. Leave blank for the style default.
@@ -278,6 +282,9 @@ export interface Page {
         | HeaderBlock
         | FooterBlock
         | CallToActionBlock
+        | ButtonBlockType
+        | LinksBlockType
+        | StackBlock
         | ContentBlock
         | MediaBlock
         | ArchiveBlock
@@ -566,6 +573,26 @@ export interface Product {
     | (
         | HeaderBlock
         | FooterBlock
+        | CallToActionBlock
+        | ButtonBlockType
+        | LinksBlockType
+        | StackBlock
+        | ContentBlock
+        | MediaBlock
+        | ArchiveBlock
+        | FormBlock
+        | LogoMarqueeBlock
+        | TextVideoBlock
+        | FeatureTabsBlock
+        | CtaBannerBlock
+        | UpdatesCardsBlock
+        | SpotlightBlock
+        | StatsBannerBlock
+        | TestimonialCardsBlock
+        | DifferentiatorsBlock
+        | DiagramSectionBlock
+        | ResourceHubBlock
+        | PlatformCarouselBlock
         | BreadcrumbBlock
         | HeroSectionBlock
         | AnnouncementBannerBlock
@@ -574,9 +601,6 @@ export interface Product {
         | TrustBadgesBlock
         | SpecsTableBlock
         | IntegrationsListBlock
-        | ContentBlock
-        | MediaBlock
-        | CallToActionBlock
       )[]
     | null;
   meta?: {
@@ -601,6 +625,16 @@ export interface Product {
    */
   generateSlug?: boolean | null;
   slug: string;
+  template?: {
+    /**
+     * Optionally base this product on a reusable template.
+     */
+    templateRef?: (number | null) | PageTemplate;
+    /**
+     * On: this product always renders the template's current blocks instead of its own. Off: use the button below to copy the template's blocks in once, then edit them independently.
+     */
+    syncWithTemplate?: boolean | null;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -630,87 +664,6 @@ export interface FooterBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'footerBlock';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "BreadcrumbBlock".
- */
-export interface BreadcrumbBlock {
-  /**
-   * Shown as the last segment: Home / Products / <this>.
-   */
-  label: string;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'breadcrumb';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "HeroSectionBlock".
- */
-export interface HeroSectionBlock {
-  type: 'video' | 'gradient' | 'split' | 'none';
-  /**
-   * For "Background": full-bleed behind the content. For "Image left": shown in the left column. Accepts an image or a video file.
-   */
-  media?: (number | null) | Media;
-  /**
-   * 0 = left to right, 90 = bottom to top, 180 = right to left.
-   */
-  gradientAngle?: number | null;
-  /**
-   * At least 2 stops, in order. Hex values.
-   */
-  gradientColors?:
-    | {
-        color: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * A decorative graphic (e.g. grid lines) blended into the top half of the hero. For "Background" types it overlays the top of the media; for "Image left" it sits below the right-side content.
-   */
-  blendImage?: (number | null) | Media;
-  /**
-   * Heading, sub text, a checklist, or CTA buttons — add as many as you need.
-   */
-  content?: (StyledTextBlock | FeatureChecklistBlock | CallToActionBlock)[] | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'heroSection';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "StyledTextBlock".
- */
-export interface StyledTextBlock {
-  text: string;
-  fontSize?: ('sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl') | null;
-  fontFamily?: ('sans' | 'serif' | 'mono') | null;
-  bold?: boolean | null;
-  /**
-   * Hex color. Leave blank to inherit.
-   */
-  color?: string | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'styledText';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FeatureChecklistBlock".
- */
-export interface FeatureChecklistBlock {
-  heading?: string | null;
-  items?:
-    | {
-        text: string;
-        id?: string | null;
-      }[]
-    | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'featureChecklist';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -756,6 +709,10 @@ export interface CallToActionBlock {
            * Choose how the link should be rendered.
            */
           appearance?: ('default' | 'outline' | 'active') | null;
+          /**
+           * Scales height, padding, font size, and border thickness together.
+           */
+          size?: ('sm' | 'default' | 'lg' | 'xl') | null;
           rounded?: ('none' | 'md' | 'full') | null;
           /**
            * Hex. Leave blank for the style default.
@@ -775,10 +732,9 @@ export interface CallToActionBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "AnnouncementBannerBlock".
+ * via the `definition` "ButtonBlockType".
  */
-export interface AnnouncementBannerBlock {
-  heading: string;
+export interface ButtonBlockType {
   link: {
     type?: ('reference' | 'custom') | null;
     newTab?: boolean | null;
@@ -797,87 +753,134 @@ export interface AnnouncementBannerBlock {
         } | null);
     url?: string | null;
     label: string;
+    /**
+     * Choose how the link should be rendered.
+     */
+    appearance?: ('default' | 'outline' | 'active') | null;
+    /**
+     * Scales height, padding, font size, and border thickness together.
+     */
+    size?: ('sm' | 'default' | 'lg' | 'xl') | null;
+    rounded?: ('none' | 'md' | 'full') | null;
+    /**
+     * Hex. Leave blank for the style default.
+     */
+    borderColor?: string | null;
+    /**
+     * Hex. Leave blank for the style default.
+     */
+    textColor?: string | null;
   };
   id?: string | null;
   blockName?: string | null;
-  blockType: 'announcementBanner';
+  blockType: 'buttonBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "SectionHeadingBlock".
+ * via the `definition` "LinksBlockType".
  */
-export interface SectionHeadingBlock {
-  text: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  alignment: 'left' | 'center' | 'right';
-  size: 'small' | 'medium' | 'large' | 'xlarge';
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'sectionHeading';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TrustBadgesBlock".
- */
-export interface TrustBadgesBlock {
-  heading?: string | null;
-  badges?:
+export interface LinksBlockType {
+  links?:
     | {
-        logo: number | Media;
-        url?: string | null;
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: number | Product;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline' | 'active') | null;
+          /**
+           * Scales height, padding, font size, and border thickness together.
+           */
+          size?: ('sm' | 'default' | 'lg' | 'xl') | null;
+          rounded?: ('none' | 'md' | 'full') | null;
+          /**
+           * Hex. Leave blank for the style default.
+           */
+          borderColor?: string | null;
+          /**
+           * Hex. Leave blank for the style default.
+           */
+          textColor?: string | null;
+        };
         id?: string | null;
       }[]
     | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'trustBadges';
+  blockType: 'linksBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "SpecsTableBlock".
+ * via the `definition` "StackBlock".
  */
-export interface SpecsTableBlock {
-  heading?: string | null;
-  specs?:
-    | {
-        label: string;
-        value: string;
-        id?: string | null;
-      }[]
+export interface StackBlock {
+  direction?: ('column' | 'row') | null;
+  gap?: ('none' | 'sm' | 'md' | 'lg' | 'xl') | null;
+  /**
+   * Let items wrap onto multiple lines instead of shrinking to fit.
+   */
+  wrap?: boolean | null;
+  align?: ('stretch' | 'start' | 'center' | 'end') | null;
+  justify?: ('start' | 'center' | 'end' | 'between' | 'around' | 'evenly') | null;
+  /**
+   * Below the tablet breakpoint, items stay in a column regardless of direction.
+   */
+  stackOnMobile?: boolean | null;
+  /**
+   * Add any block — this Stack lays them out as a flexbox row or column and controls their spacing/alignment as a group.
+   */
+  items?:
+    | (
+        | HeaderBlock
+        | FooterBlock
+        | CallToActionBlock
+        | ButtonBlockType
+        | LinksBlockType
+        | ContentBlock
+        | MediaBlock
+        | ArchiveBlock
+        | FormBlock
+        | LogoMarqueeBlock
+        | TextVideoBlock
+        | FeatureTabsBlock
+        | CtaBannerBlock
+        | UpdatesCardsBlock
+        | SpotlightBlock
+        | StatsBannerBlock
+        | TestimonialCardsBlock
+        | DifferentiatorsBlock
+        | DiagramSectionBlock
+        | ResourceHubBlock
+        | PlatformCarouselBlock
+        | BreadcrumbBlock
+        | HeroSectionBlock
+        | AnnouncementBannerBlock
+        | SectionHeadingBlock
+        | FeatureChecklistBlock
+        | TrustBadgesBlock
+        | SpecsTableBlock
+        | IntegrationsListBlock
+      )[]
     | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'specsTable';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "IntegrationsListBlock".
- */
-export interface IntegrationsListBlock {
-  heading?: string | null;
-  integrations?:
-    | {
-        name: string;
-        description?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'integrationsList';
+  blockType: 'stack';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -925,6 +928,10 @@ export interface ContentBlock {
            * Choose how the link should be rendered.
            */
           appearance?: ('default' | 'outline') | null;
+          /**
+           * Scales height, padding, font size, and border thickness together.
+           */
+          size?: ('sm' | 'default' | 'lg' | 'xl') | null;
           rounded?: ('none' | 'md' | 'full') | null;
           /**
            * Hex. Leave blank for the style default.
@@ -1376,6 +1383,10 @@ export interface CtaBannerBlock {
            * Choose how the link should be rendered.
            */
           appearance?: ('default' | 'outline' | 'active') | null;
+          /**
+           * Scales height, padding, font size, and border thickness together.
+           */
+          size?: ('sm' | 'default' | 'lg' | 'xl') | null;
           rounded?: ('none' | 'md' | 'full') | null;
           /**
            * Hex. Leave blank for the style default.
@@ -1504,6 +1515,10 @@ export interface StatsBannerBlock {
            * Choose how the link should be rendered.
            */
           appearance?: ('default' | 'outline' | 'active') | null;
+          /**
+           * Scales height, padding, font size, and border thickness together.
+           */
+          size?: ('sm' | 'default' | 'lg' | 'xl') | null;
           rounded?: ('none' | 'md' | 'full') | null;
           /**
            * Hex. Leave blank for the style default.
@@ -1673,6 +1688,197 @@ export interface PlatformCarouselBlock {
   blockType: 'platformCarousel';
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BreadcrumbBlock".
+ */
+export interface BreadcrumbBlock {
+  /**
+   * Shown as the middle segment: Home / <this> / <breadcrumb name>.
+   */
+  section?: string | null;
+  /**
+   * Shown as the last segment: Home / <section> / <this>.
+   */
+  label: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'breadcrumb';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroSectionBlock".
+ */
+export interface HeroSectionBlock {
+  type: 'video' | 'gradient' | 'split' | 'none';
+  /**
+   * For "Background": full-bleed behind the content. For "Image left": shown in the left column. Accepts an image or a video file.
+   */
+  media?: (number | null) | Media;
+  /**
+   * 0 = left to right, 90 = bottom to top, 180 = right to left.
+   */
+  gradientAngle?: number | null;
+  /**
+   * At least 2 stops, in order. Hex values.
+   */
+  gradientColors?:
+    | {
+        color: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * A decorative graphic (e.g. grid lines) blended into the top half of the hero. For "Background" types it overlays the top of the media; for "Image left" it sits below the right-side content.
+   */
+  blendImage?: (number | null) | Media;
+  /**
+   * Heading, sub text, a checklist, or CTA buttons — add as many as you need.
+   */
+  content?: (StyledTextBlock | FeatureChecklistBlock | CallToActionBlock | ButtonBlockType | LinksBlockType)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'heroSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StyledTextBlock".
+ */
+export interface StyledTextBlock {
+  text: string;
+  fontSize?: ('sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl') | null;
+  fontFamily?: ('sans' | 'serif' | 'mono') | null;
+  bold?: boolean | null;
+  /**
+   * Hex color. Leave blank to inherit.
+   */
+  color?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'styledText';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureChecklistBlock".
+ */
+export interface FeatureChecklistBlock {
+  heading?: string | null;
+  items?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'featureChecklist';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AnnouncementBannerBlock".
+ */
+export interface AnnouncementBannerBlock {
+  heading: string;
+  link: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null)
+      | ({
+          relationTo: 'products';
+          value: number | Product;
+        } | null);
+    url?: string | null;
+    label: string;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'announcementBanner';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionHeadingBlock".
+ */
+export interface SectionHeadingBlock {
+  text: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  alignment: 'left' | 'center' | 'right';
+  size: 'small' | 'medium' | 'large' | 'xlarge';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'sectionHeading';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TrustBadgesBlock".
+ */
+export interface TrustBadgesBlock {
+  heading?: string | null;
+  badges?:
+    | {
+        logo: number | Media;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'trustBadges';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SpecsTableBlock".
+ */
+export interface SpecsTableBlock {
+  heading?: string | null;
+  specs?:
+    | {
+        label: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'specsTable';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IntegrationsListBlock".
+ */
+export interface IntegrationsListBlock {
+  heading?: string | null;
+  integrations?:
+    | {
+        name: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'integrationsList';
+}
+/**
  * Reusable block layouts that pages can copy from or stay synced with.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1681,11 +1887,18 @@ export interface PlatformCarouselBlock {
 export interface PageTemplate {
   id: number;
   name: string;
+  /**
+   * Which collections can pick this template.
+   */
+  usableFor?: ('pages' | 'products')[] | null;
   layout?:
     | (
         | HeaderBlock
         | FooterBlock
         | CallToActionBlock
+        | ButtonBlockType
+        | LinksBlockType
+        | StackBlock
         | ContentBlock
         | MediaBlock
         | ArchiveBlock
@@ -1702,6 +1915,14 @@ export interface PageTemplate {
         | DiagramSectionBlock
         | ResourceHubBlock
         | PlatformCarouselBlock
+        | BreadcrumbBlock
+        | HeroSectionBlock
+        | AnnouncementBannerBlock
+        | SectionHeadingBlock
+        | FeatureChecklistBlock
+        | TrustBadgesBlock
+        | SpecsTableBlock
+        | IntegrationsListBlock
       )[]
     | null;
   updatedAt: string;
@@ -2054,6 +2275,7 @@ export interface PagesSelect<T extends boolean = true> {
                     url?: T;
                     label?: T;
                     appearance?: T;
+                    size?: T;
                     rounded?: T;
                     borderColor?: T;
                     textColor?: T;
@@ -2069,6 +2291,9 @@ export interface PagesSelect<T extends boolean = true> {
         headerBlock?: T | HeaderBlockSelect<T>;
         footerBlock?: T | FooterBlockSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
+        buttonBlock?: T | ButtonBlockTypeSelect<T>;
+        linksBlock?: T | LinksBlockTypeSelect<T>;
+        stack?: T | StackBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
@@ -2144,11 +2369,108 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
               url?: T;
               label?: T;
               appearance?: T;
+              size?: T;
               rounded?: T;
               borderColor?: T;
               textColor?: T;
             };
         id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ButtonBlockType_select".
+ */
+export interface ButtonBlockTypeSelect<T extends boolean = true> {
+  link?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+        appearance?: T;
+        size?: T;
+        rounded?: T;
+        borderColor?: T;
+        textColor?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LinksBlockType_select".
+ */
+export interface LinksBlockTypeSelect<T extends boolean = true> {
+  links?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+              size?: T;
+              rounded?: T;
+              borderColor?: T;
+              textColor?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StackBlock_select".
+ */
+export interface StackBlockSelect<T extends boolean = true> {
+  direction?: T;
+  gap?: T;
+  wrap?: T;
+  align?: T;
+  justify?: T;
+  stackOnMobile?: T;
+  items?:
+    | T
+    | {
+        headerBlock?: T | HeaderBlockSelect<T>;
+        footerBlock?: T | FooterBlockSelect<T>;
+        cta?: T | CallToActionBlockSelect<T>;
+        buttonBlock?: T | ButtonBlockTypeSelect<T>;
+        linksBlock?: T | LinksBlockTypeSelect<T>;
+        content?: T | ContentBlockSelect<T>;
+        mediaBlock?: T | MediaBlockSelect<T>;
+        archive?: T | ArchiveBlockSelect<T>;
+        formBlock?: T | FormBlockSelect<T>;
+        logoMarquee?: T | LogoMarqueeBlockSelect<T>;
+        textVideo?: T | TextVideoBlockSelect<T>;
+        featureTabs?: T | FeatureTabsBlockSelect<T>;
+        ctaBanner?: T | CtaBannerBlockSelect<T>;
+        updatesCards?: T | UpdatesCardsBlockSelect<T>;
+        spotlight?: T | SpotlightBlockSelect<T>;
+        statsBanner?: T | StatsBannerBlockSelect<T>;
+        testimonialCards?: T | TestimonialCardsBlockSelect<T>;
+        differentiators?: T | DifferentiatorsBlockSelect<T>;
+        diagramSection?: T | DiagramSectionBlockSelect<T>;
+        resourceHub?: T | ResourceHubBlockSelect<T>;
+        platformCarousel?: T | PlatformCarouselBlockSelect<T>;
+        breadcrumb?: T | BreadcrumbBlockSelect<T>;
+        heroSection?: T | HeroSectionBlockSelect<T>;
+        announcementBanner?: T | AnnouncementBannerBlockSelect<T>;
+        sectionHeading?: T | SectionHeadingBlockSelect<T>;
+        featureChecklist?: T | FeatureChecklistBlockSelect<T>;
+        trustBadges?: T | TrustBadgesBlockSelect<T>;
+        specsTable?: T | SpecsTableBlockSelect<T>;
+        integrationsList?: T | IntegrationsListBlockSelect<T>;
       };
   id?: T;
   blockName?: T;
@@ -2173,6 +2495,7 @@ export interface ContentBlockSelect<T extends boolean = true> {
               url?: T;
               label?: T;
               appearance?: T;
+              size?: T;
               rounded?: T;
               borderColor?: T;
               textColor?: T;
@@ -2328,6 +2651,7 @@ export interface CtaBannerBlockSelect<T extends boolean = true> {
               url?: T;
               label?: T;
               appearance?: T;
+              size?: T;
               rounded?: T;
               borderColor?: T;
               textColor?: T;
@@ -2419,6 +2743,7 @@ export interface StatsBannerBlockSelect<T extends boolean = true> {
               url?: T;
               label?: T;
               appearance?: T;
+              size?: T;
               rounded?: T;
               borderColor?: T;
               textColor?: T;
@@ -2570,111 +2895,10 @@ export interface PlatformCarouselBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "page-templates_select".
- */
-export interface PageTemplatesSelect<T extends boolean = true> {
-  name?: T;
-  layout?:
-    | T
-    | {
-        headerBlock?: T | HeaderBlockSelect<T>;
-        footerBlock?: T | FooterBlockSelect<T>;
-        cta?: T | CallToActionBlockSelect<T>;
-        content?: T | ContentBlockSelect<T>;
-        mediaBlock?: T | MediaBlockSelect<T>;
-        archive?: T | ArchiveBlockSelect<T>;
-        formBlock?: T | FormBlockSelect<T>;
-        logoMarquee?: T | LogoMarqueeBlockSelect<T>;
-        textVideo?: T | TextVideoBlockSelect<T>;
-        featureTabs?: T | FeatureTabsBlockSelect<T>;
-        ctaBanner?: T | CtaBannerBlockSelect<T>;
-        updatesCards?: T | UpdatesCardsBlockSelect<T>;
-        spotlight?: T | SpotlightBlockSelect<T>;
-        statsBanner?: T | StatsBannerBlockSelect<T>;
-        testimonialCards?: T | TestimonialCardsBlockSelect<T>;
-        differentiators?: T | DifferentiatorsBlockSelect<T>;
-        diagramSection?: T | DiagramSectionBlockSelect<T>;
-        resourceHub?: T | ResourceHubBlockSelect<T>;
-        platformCarousel?: T | PlatformCarouselBlockSelect<T>;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "posts_select".
- */
-export interface PostsSelect<T extends boolean = true> {
-  title?: T;
-  heroImage?: T;
-  content?: T;
-  relatedPosts?: T;
-  categories?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        image?: T;
-        description?: T;
-      };
-  publishedAt?: T;
-  authors?: T;
-  populatedAuthors?:
-    | T
-    | {
-        id?: T;
-        name?: T;
-      };
-  generateSlug?: T;
-  slug?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "products_select".
- */
-export interface ProductsSelect<T extends boolean = true> {
-  title?: T;
-  layout?:
-    | T
-    | {
-        headerBlock?: T | HeaderBlockSelect<T>;
-        footerBlock?: T | FooterBlockSelect<T>;
-        breadcrumb?: T | BreadcrumbBlockSelect<T>;
-        heroSection?: T | HeroSectionBlockSelect<T>;
-        announcementBanner?: T | AnnouncementBannerBlockSelect<T>;
-        sectionHeading?: T | SectionHeadingBlockSelect<T>;
-        featureChecklist?: T | FeatureChecklistBlockSelect<T>;
-        trustBadges?: T | TrustBadgesBlockSelect<T>;
-        specsTable?: T | SpecsTableBlockSelect<T>;
-        integrationsList?: T | IntegrationsListBlockSelect<T>;
-        content?: T | ContentBlockSelect<T>;
-        mediaBlock?: T | MediaBlockSelect<T>;
-        cta?: T | CallToActionBlockSelect<T>;
-      };
-  meta?:
-    | T
-    | {
-        title?: T;
-        image?: T;
-        description?: T;
-      };
-  publishedAt?: T;
-  hideHeader?: T;
-  hideFooter?: T;
-  generateSlug?: T;
-  slug?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "BreadcrumbBlock_select".
  */
 export interface BreadcrumbBlockSelect<T extends boolean = true> {
+  section?: T;
   label?: T;
   id?: T;
   blockName?: T;
@@ -2700,6 +2924,8 @@ export interface HeroSectionBlockSelect<T extends boolean = true> {
         styledText?: T | StyledTextBlockSelect<T>;
         featureChecklist?: T | FeatureChecklistBlockSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
+        buttonBlock?: T | ButtonBlockTypeSelect<T>;
+        linksBlock?: T | LinksBlockTypeSelect<T>;
       };
   id?: T;
   blockName?: T;
@@ -2808,6 +3034,143 @@ export interface IntegrationsListBlockSelect<T extends boolean = true> {
       };
   id?: T;
   blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-templates_select".
+ */
+export interface PageTemplatesSelect<T extends boolean = true> {
+  name?: T;
+  usableFor?: T;
+  layout?:
+    | T
+    | {
+        headerBlock?: T | HeaderBlockSelect<T>;
+        footerBlock?: T | FooterBlockSelect<T>;
+        cta?: T | CallToActionBlockSelect<T>;
+        buttonBlock?: T | ButtonBlockTypeSelect<T>;
+        linksBlock?: T | LinksBlockTypeSelect<T>;
+        stack?: T | StackBlockSelect<T>;
+        content?: T | ContentBlockSelect<T>;
+        mediaBlock?: T | MediaBlockSelect<T>;
+        archive?: T | ArchiveBlockSelect<T>;
+        formBlock?: T | FormBlockSelect<T>;
+        logoMarquee?: T | LogoMarqueeBlockSelect<T>;
+        textVideo?: T | TextVideoBlockSelect<T>;
+        featureTabs?: T | FeatureTabsBlockSelect<T>;
+        ctaBanner?: T | CtaBannerBlockSelect<T>;
+        updatesCards?: T | UpdatesCardsBlockSelect<T>;
+        spotlight?: T | SpotlightBlockSelect<T>;
+        statsBanner?: T | StatsBannerBlockSelect<T>;
+        testimonialCards?: T | TestimonialCardsBlockSelect<T>;
+        differentiators?: T | DifferentiatorsBlockSelect<T>;
+        diagramSection?: T | DiagramSectionBlockSelect<T>;
+        resourceHub?: T | ResourceHubBlockSelect<T>;
+        platformCarousel?: T | PlatformCarouselBlockSelect<T>;
+        breadcrumb?: T | BreadcrumbBlockSelect<T>;
+        heroSection?: T | HeroSectionBlockSelect<T>;
+        announcementBanner?: T | AnnouncementBannerBlockSelect<T>;
+        sectionHeading?: T | SectionHeadingBlockSelect<T>;
+        featureChecklist?: T | FeatureChecklistBlockSelect<T>;
+        trustBadges?: T | TrustBadgesBlockSelect<T>;
+        specsTable?: T | SpecsTableBlockSelect<T>;
+        integrationsList?: T | IntegrationsListBlockSelect<T>;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  heroImage?: T;
+  content?: T;
+  relatedPosts?: T;
+  categories?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  publishedAt?: T;
+  authors?: T;
+  populatedAuthors?:
+    | T
+    | {
+        id?: T;
+        name?: T;
+      };
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  title?: T;
+  layout?:
+    | T
+    | {
+        headerBlock?: T | HeaderBlockSelect<T>;
+        footerBlock?: T | FooterBlockSelect<T>;
+        cta?: T | CallToActionBlockSelect<T>;
+        buttonBlock?: T | ButtonBlockTypeSelect<T>;
+        linksBlock?: T | LinksBlockTypeSelect<T>;
+        stack?: T | StackBlockSelect<T>;
+        content?: T | ContentBlockSelect<T>;
+        mediaBlock?: T | MediaBlockSelect<T>;
+        archive?: T | ArchiveBlockSelect<T>;
+        formBlock?: T | FormBlockSelect<T>;
+        logoMarquee?: T | LogoMarqueeBlockSelect<T>;
+        textVideo?: T | TextVideoBlockSelect<T>;
+        featureTabs?: T | FeatureTabsBlockSelect<T>;
+        ctaBanner?: T | CtaBannerBlockSelect<T>;
+        updatesCards?: T | UpdatesCardsBlockSelect<T>;
+        spotlight?: T | SpotlightBlockSelect<T>;
+        statsBanner?: T | StatsBannerBlockSelect<T>;
+        testimonialCards?: T | TestimonialCardsBlockSelect<T>;
+        differentiators?: T | DifferentiatorsBlockSelect<T>;
+        diagramSection?: T | DiagramSectionBlockSelect<T>;
+        resourceHub?: T | ResourceHubBlockSelect<T>;
+        platformCarousel?: T | PlatformCarouselBlockSelect<T>;
+        breadcrumb?: T | BreadcrumbBlockSelect<T>;
+        heroSection?: T | HeroSectionBlockSelect<T>;
+        announcementBanner?: T | AnnouncementBannerBlockSelect<T>;
+        sectionHeading?: T | SectionHeadingBlockSelect<T>;
+        featureChecklist?: T | FeatureChecklistBlockSelect<T>;
+        trustBadges?: T | TrustBadgesBlockSelect<T>;
+        specsTable?: T | SpecsTableBlockSelect<T>;
+        integrationsList?: T | IntegrationsListBlockSelect<T>;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  publishedAt?: T;
+  hideHeader?: T;
+  hideFooter?: T;
+  generateSlug?: T;
+  slug?: T;
+  template?:
+    | T
+    | {
+        templateRef?: T;
+        syncWithTemplate?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

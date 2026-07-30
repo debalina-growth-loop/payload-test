@@ -78,7 +78,10 @@ export default async function Page({ params: paramsPromise }: Args) {
     const templateId =
       typeof template.templateRef === 'object' ? template.templateRef.id : template.templateRef
     const templateDoc = await queryTemplateById({ id: String(templateId) })
-    blocks = templateDoc?.layout ?? []
+    // A template's block set is a superset of Page['layout'] (it can also hold
+    // product-only blocks), so RenderBlocks — not this narrower type — is what
+    // decides how each block type actually renders.
+    blocks = (templateDoc?.layout ?? []) as typeof blocks
   }
 
   const { header, footer, rest } = extractChromeBlocks(blocks, { hideHeader, hideFooter })

@@ -129,13 +129,35 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
     }
 
     linkResult.fields.push({
-      name: 'appearance',
-      type: 'select',
-      admin: {
-        description: 'Choose how the link should be rendered.',
-      },
-      defaultValue: 'default',
-      options: appearanceOptionsToUse,
+      type: 'row',
+      fields: [
+        {
+          name: 'appearance',
+          type: 'select',
+          admin: {
+            width: '50%',
+            description: 'Choose how the link should be rendered.',
+          },
+          defaultValue: 'default',
+          options: appearanceOptionsToUse,
+        },
+        {
+          name: 'size',
+          type: 'select',
+          label: 'Size',
+          defaultValue: 'default',
+          admin: {
+            width: '50%',
+            description: 'Scales height, padding, font size, and border thickness together.',
+          },
+          options: [
+            { label: 'Small', value: 'sm' },
+            { label: 'Medium', value: 'default' },
+            { label: 'Large', value: 'lg' },
+            { label: 'Extra Large', value: 'xl' },
+          ],
+        },
+      ],
     })
 
     linkResult.fields.push({
