@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '../../access/authenticated'
-import { templateBlocks } from '@/blocks/templateBlocks'
+import { allBlocks } from '@/blocks/allBlocks'
 
 export const PageTemplates: CollectionConfig<'page-templates'> = {
   slug: 'page-templates',
@@ -38,7 +38,7 @@ export const PageTemplates: CollectionConfig<'page-templates'> = {
     {
       name: 'layout',
       type: 'blocks',
-      blocks: templateBlocks,
+      blocks: allBlocks,
       admin: {
         initCollapsed: true,
       },

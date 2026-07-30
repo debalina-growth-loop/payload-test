@@ -1,11 +1,5 @@
 import type { Block } from 'payload'
 
-import { ButtonBlock } from '../ButtonBlock/config'
-import { CallToAction } from '../CallToAction/config'
-import { FeatureChecklist } from '../FeatureChecklist/config'
-import { LinksBlock } from '../LinksBlock/config'
-import { StyledText } from '../StyledText/config'
-
 export const HeroSectionBlock: Block = {
   slug: 'heroSection',
   interfaceName: 'HeroSectionBlock',
@@ -21,21 +15,22 @@ export const HeroSectionBlock: Block = {
       defaultValue: 'video',
       required: true,
       options: [
-        { label: 'Background video/image (full-bleed)', value: 'video' },
-        { label: 'Gradient fill (full-bleed)', value: 'gradient' },
-        { label: 'Image left / content right', value: 'split' },
-        { label: 'None — content only, no media', value: 'none' },
+        { label: 'Video background', value: 'video' },
+        { label: 'Gradient background', value: 'gradient' },
+        { label: 'Solid / transparent background', value: 'solid' },
       ],
+      admin: {
+        description: 'All three are full-bleed and support a blend/accent image.',
+      },
     },
     {
       name: 'media',
       type: 'upload',
       relationTo: 'media',
-      label: 'Background / side image or video',
+      label: 'Background image or video',
       admin: {
-        condition: (_, { type } = {}) => ['video', 'split'].includes(type),
-        description:
-          'For "Background": full-bleed behind the content. For "Image left": shown in the left column. Accepts an image or a video file.',
+        condition: (_, { type } = {}) => type === 'video',
+        description: 'Full-bleed behind the content. Accepts an image or a video file.',
       },
     },
     {
@@ -70,14 +65,23 @@ export const HeroSectionBlock: Block = {
       ],
     },
     {
+      name: 'backgroundColor',
+      type: 'text',
+      label: 'Background color',
+      admin: {
+        condition: (_, { type } = {}) => type === 'solid',
+        width: '50%',
+        placeholder: '#012A36',
+        description: 'Hex value. Leave blank for a transparent background.',
+      },
+    },
+    {
       name: 'blendImage',
       type: 'upload',
       relationTo: 'media',
       label: 'Blend / accent image',
       admin: {
-        condition: (_, { type } = {}) => ['video', 'gradient', 'split'].includes(type),
-        description:
-          'A decorative graphic (e.g. grid lines) blended into the top half of the hero. For "Background" types it overlays the top of the media; for "Image left" it sits below the right-side content.',
+        description: 'A decorative graphic (e.g. grid lines) blended into the top half of the hero.',
       },
     },
     {
@@ -86,9 +90,11 @@ export const HeroSectionBlock: Block = {
       label: 'Content (left side)',
       admin: {
         initCollapsed: true,
-        description: 'Heading, sub text, a checklist, or CTA buttons — add as many as you need.',
+        description: 'Add any block to build out the hero content — heading, checklist, CTA, etc.',
       },
-      blocks: [StyledText, FeatureChecklist, CallToAction, ButtonBlock, LinksBlock],
+      // Populated in allBlocks.ts with every non-container block (kept empty
+      // here to avoid a circular import with that file).
+      blocks: [],
     },
   ],
 }
