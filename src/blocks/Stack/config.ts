@@ -102,9 +102,8 @@ export const StackBlock: Block = {
         description:
           'Add any block — this Stack lays them out as a flexbox row or column and controls their spacing/alignment as a group.',
       },
-      // Populated in templateBlocks.ts with the full shared block set
-      // (including Stack itself, for nesting) — kept empty here to avoid a
-      // circular import between this file and templateBlocks.ts.
+      // Populated in allBlocks.ts with every non-container block — kept
+      // empty here to avoid a circular import with that file.
       blocks: [],
     },
   ],

@@ -2,7 +2,6 @@ build
 dist / media
 node_modules
 .DS_Store
-.env
 .next
 
 # Local baseline written by `pnpm s3:snap`
@@ -28,3 +27,7 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 data
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+config.bat
