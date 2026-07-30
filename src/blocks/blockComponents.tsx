@@ -29,10 +29,11 @@ import { StyledTextBlock } from '@/blocks/StyledText/Component'
 import { StackBlockComponent } from '@/blocks/Stack/Component'
 
 // Single canonical slug -> component registry, shared by RenderBlocks,
-// RenderProductBlocks and Stack (which all need to dispatch any block type).
-// `stack` is a getter, not a plain value: Stack/Component.tsx imports this
-// registry too (to render its own nested items), so this file and Stack's
-// are mutually circular. A plain `stack: StackBlockComponent` would read the
+// RenderProductBlocks, Stack and Hero Section (all of which need to dispatch
+// any block type for their own nested content). `stack` and `heroSection` are
+// getters, not plain values: Stack/Component.tsx and HeroSection's nested
+// content renderer both import this registry too, so this file and theirs are
+// mutually circular. A plain `stack: StackBlockComponent` would read the
 // binding the instant this object literal is built — which, depending on
 // which of the two modules happens to load first, can happen before the
 // other has finished initializing (ReferenceError: before initialization).
@@ -64,7 +65,9 @@ export const blockComponents = {
   resourceHub: ResourceHubComponent,
   platformCarousel: PlatformCarouselComponent,
   breadcrumb: BreadcrumbBlockComponent,
-  heroSection: HeroSectionBlockComponent,
+  get heroSection() {
+    return HeroSectionBlockComponent
+  },
   announcementBanner: AnnouncementBannerBlock,
   sectionHeading: SectionHeadingBlock,
   featureChecklist: FeatureChecklistBlock,

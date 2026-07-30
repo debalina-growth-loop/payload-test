@@ -41,14 +41,13 @@ export function extractChromeBlocks<T extends AnyLayoutBlock>(
 
   let headerVariant = headerBlock?.variant ?? undefined
 
-  // A full-bleed Hero Section (video/gradient) always starts at the very top
-  // of the screen, so the header needs to float over it — unless a Header
-  // block already picked an explicit style. Checked here (not per-route) so
-  // it also covers a Page synced to a template built from product blocks.
-  const heroBlock = blocks.find((b) => b.blockType === 'heroSection') as
-    | { type?: string | null }
-    | undefined
-  if (heroBlock && ['video', 'gradient'].includes(heroBlock.type || '') && !headerVariant) {
+  // A Hero Section is always full-bleed (video/gradient/solid) and starts at
+  // the very top of the screen, so the header needs to float over it — unless
+  // a Header block already picked an explicit style. Checked here (not
+  // per-route) so it also covers a Page synced to a template built from
+  // product blocks.
+  const heroBlock = blocks.find((b) => b.blockType === 'heroSection')
+  if (heroBlock && !headerVariant) {
     headerVariant = 'glass'
   }
 
