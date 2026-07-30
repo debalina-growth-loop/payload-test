@@ -4,7 +4,7 @@ import { APIError } from 'payload'
 
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
-import { templateBlocks } from '@/blocks/templateBlocks'
+import { allBlocks } from '@/blocks/allBlocks'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
@@ -69,7 +69,7 @@ export const Products: CollectionConfig<'products'> = {
               admin: {
                 initCollapsed: true,
               },
-              blocks: templateBlocks,
+              blocks: allBlocks,
             },
           ],
         },
