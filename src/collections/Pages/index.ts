@@ -5,7 +5,7 @@ import type { Page } from '@/payload-types'
 
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
-import { pageBlocks } from '@/blocks/pageBlocks'
+import { allBlocks } from '@/blocks/allBlocks'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -71,7 +71,7 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: pageBlocks,
+              blocks: allBlocks,
               // Optional so a page can be just a hero (e.g. the marketing homepage)
               // with no body blocks.
               admin: {

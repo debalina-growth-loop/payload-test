@@ -1,3 +1,4 @@
+
 /** @type {import('tailwindcss').Config} */
 const config = {
   theme: {
@@ -45,4 +46,4 @@ const config = {
   },
 }
 
-export default config
+export default config;
